@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Anderson.PackageAudit.Authorization;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -36,10 +35,5 @@ namespace Anderson.PackageAudit.Factories
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever());
             return await configurationManager.GetConfigurationAsync(CancellationToken.None);
         }
-    }
-
-    public class WellKnownEnvironments
-    {
-        public const string Test = "Test";
     }
 }
