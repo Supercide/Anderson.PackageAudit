@@ -10,7 +10,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD8B1E7A-D34D-49A9-8C99-FFFE696A71AF}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		build.cake = build.cake
+		build.ps1 = build.ps1
+		LICENSE = LICENSE
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2745F778-EC94-48BE-A300-B73EFF5169DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anderson.PackageAudit.Tests", "tests\Anderson.PackageAudit.Tests\Anderson.PackageAudit.Tests.csproj", "{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,12 +30,17 @@ Global
 		{2722FC6F-7EAE-499E-AEC8-FEF974421506}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2722FC6F-7EAE-499E-AEC8-FEF974421506}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2722FC6F-7EAE-499E-AEC8-FEF974421506}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2722FC6F-7EAE-499E-AEC8-FEF974421506} = {ABD1AF97-FF53-4EBE-AA38-1F5423A6A666}
+		{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33} = {2745F778-EC94-48BE-A300-B73EFF5169DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E4031A5A-AEBF-4BC3-934C-B9CD0631EC4E}
