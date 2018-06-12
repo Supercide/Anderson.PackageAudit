@@ -10,7 +10,7 @@ namespace Anderson.PackageAudit
     public static class PackageAuditor
     {
         [FunctionName("PackageAuditor")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest req)
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "~packages")]HttpRequest req)
         {
             var pipeline = AuditPipelines.AuditPackages;
             var response = pipeline.Handle(req);
