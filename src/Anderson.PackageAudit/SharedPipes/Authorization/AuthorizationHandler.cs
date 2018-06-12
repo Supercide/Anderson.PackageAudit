@@ -42,10 +42,9 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization
 
         private static Response<string, Error> ExtractToken(HttpRequest request)
         {
-            if (request.Headers.ContainsKey("Authorization") ||
-                request.Headers.ContainsKey("authorization"))
+            if (request.Headers.ContainsKey("Authorization"))
             {
-                string value = request.Headers["authorization"].First();
+                string value = request.Headers["Authorization"].First();
                 return value.Substring(7);
             }
 
