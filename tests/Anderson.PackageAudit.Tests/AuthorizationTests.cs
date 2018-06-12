@@ -3,7 +3,6 @@ using Anderson.PackageAudit.Factories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests

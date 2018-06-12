@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using Anderson.PackageAudit.Authorization;
+﻿using Anderson.PackageAudit.Authorization;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Factories;
 using Anderson.PackageAudit.NoOp;
 using Anderson.Pipelines.Builders;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Pipelines;
 
 namespace Anderson.PackageAudit.Pipelines

@@ -1,5 +1,4 @@
 ﻿using Anderson.Pipelines.Definitions;
-using Pipelines;
 
 namespace Anderson.PackageAudit.NoOp
 {
