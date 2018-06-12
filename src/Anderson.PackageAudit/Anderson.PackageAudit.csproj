@@ -7,7 +7,7 @@
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Anderson.Pipelines" Version="1.0.0.14-Dev" />
+    <PackageReference Include="Anderson.Pipelines" Version="1.0.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.13" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="2.1.4" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.1.4" />
