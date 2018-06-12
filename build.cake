@@ -10,6 +10,8 @@ var buildVersion            = Argument<string>("buildVersion", "0.1.0");
 //////////////////////////////////////////////////////////////////////
 var artifacts               = "./artifacts";
 var testResults             = string.Concat(artifacts, "/test-results/");
+var publish                 = string.Concat(artifacts, "/publish/");
+var deployable              = string.Concat(artifacts, "/deployables/");
 var solution                = GetFiles("./**/*.sln").FirstOrDefault();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,11 +80,30 @@ Task("Test")
             DotNetCoreTest(projectFile.FullPath, settings);
         }
     });
+
+Task("Publish")
+    .IsDependentOn("Test")
+    .Does(() =>
+    {
+		CreateDirectory(deployable);
+        var settings = new DotNetCorePublishSettings 
+        {
+           OutputDirectory = Directory(publish),
+           Configuration = buildConfig,
+		   NoRestore = true,
+		   SelfContained = true
+        };
+
+        DotNetCorePublish("./src/Anderson.PackageAudit/Anderson.PackageAudit.csproj", settings);
+
+		var files = GetFiles(publish+"**/*.*");
+		Zip(publish, deployable+"Anderson.PackageAudit-"+buildVersion+".zip", files);
+    });
 ///////////////////////////////////////////////////////////////////////////////
 // TASKS
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Test");
+    .IsDependentOn("Publish");
 
 RunTarget(target);
