@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Anderson.PackageAudit.Infrastructure;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Anderson.PackageAudit.Factories
+namespace Anderson.PackageAudit.SharedPipes.Authorization.Factories
 {
     public class TokenValidationParametersFactory
     {

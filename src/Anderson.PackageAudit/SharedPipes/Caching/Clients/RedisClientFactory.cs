@@ -1,5 +1,5 @@
 ﻿using System;
-using Anderson.PackageAudit.Factories;
+using Anderson.PackageAudit.Infrastructure;
 using ServiceStack.Redis;
 
 namespace Anderson.PackageAudit.SharedPipes.Caching.Clients

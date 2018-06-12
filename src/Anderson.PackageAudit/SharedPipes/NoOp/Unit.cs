@@ -1,4 +1,4 @@
-﻿namespace Anderson.PackageAudit.Pipelines
+﻿namespace Anderson.PackageAudit.SharedPipes.NoOp
 {
     public class Unit
     {

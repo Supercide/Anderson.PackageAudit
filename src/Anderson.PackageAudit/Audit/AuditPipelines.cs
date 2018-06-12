@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
-using Anderson.PackageAudit.Authorization;
 using Anderson.PackageAudit.Errors;
-using Anderson.PackageAudit.Factories;
-using Anderson.PackageAudit.NoOp;
+using Anderson.PackageAudit.Packages;
+using Anderson.PackageAudit.SharedPipes.Authorization;
+using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
 using Anderson.PackageAudit.SharedPipes.Caching;
 using Anderson.PackageAudit.SharedPipes.Caching.Clients;
+using Anderson.PackageAudit.SharedPipes.Mutations;
+using Anderson.PackageAudit.SharedPipes.NoOp;
 using Anderson.Pipelines.Builders;
 using Anderson.Pipelines.Handlers;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 
-namespace Anderson.PackageAudit.Pipelines
+namespace Anderson.PackageAudit.Audit
 {
     public class AuditPipelines
     {

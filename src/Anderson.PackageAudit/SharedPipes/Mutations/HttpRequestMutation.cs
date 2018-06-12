@@ -3,7 +3,7 @@ using Anderson.Pipelines.Definitions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Anderson.PackageAudit.Pipelines
+namespace Anderson.PackageAudit.SharedPipes.Mutations
 {
     public class HttpRequestMutation<TModel, TResponse> : PipelineMutationDefinition<HttpRequest, TModel, TResponse>
     {
