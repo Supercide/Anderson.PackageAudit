@@ -6,7 +6,7 @@ namespace Anderson.PackageAudit.SharedPipes.Caching.Clients
 {
     public class RedisClientFactory
     {
-        static Lazy<IRedisClient> _redisClient = new Lazy<IRedisClient>(() => {
+        static readonly Lazy<IRedisClient> _redisClient = new Lazy<IRedisClient>(() => {
             var redisManager = new RedisManagerPool(ConfigurationFactory.Instance["redis:connectionstring"]);
             return redisManager.GetClient();
         });
