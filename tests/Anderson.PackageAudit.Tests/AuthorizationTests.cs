@@ -9,7 +9,6 @@ namespace Anderson.PackageAudit.Tests
 {
     public class AuthorizationTests
     {
-        
         public void SetEnvironmentVariables(
             string environment = "Test", 
             string issuer = "https://d-magnoxium.eu.auth0.com/", 
