@@ -21,6 +21,7 @@ local.settings.json
 x64/
 x86/
 bld/
+tools/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
