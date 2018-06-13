@@ -6,10 +6,9 @@ using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using NUnit.Framework;
 
-namespace Anderson.PackageAudit.Tests
+namespace Anderson.PackageAudit.Tests.Handlers
 {
     public class AuthorizationTests
     {
@@ -97,9 +96,12 @@ namespace Anderson.PackageAudit.Tests
         private static DefaultHttpRequest CreateDefaultHttpRequest()
         {
             var httpRequest = new DefaultHttpRequest(new DefaultHttpContext());
+            var memoryStream = new MemoryStream();
+            
             var request = "[{name: \"FluentValidation\", version: \"1.0.1\"}]";
-            httpRequest.Body.Write(Encoding.UTF8.GetBytes(request), 0, request.Length);
-            httpRequest.Body.Seek(0, SeekOrigin.Begin);
+            memoryStream.Write(Encoding.UTF8.GetBytes(request), 0, request.Length);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            httpRequest.Body = memoryStream;
             return httpRequest;
         }
     }

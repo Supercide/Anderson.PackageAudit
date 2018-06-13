@@ -30,7 +30,7 @@ namespace Anderson.PackageAudit.SharedPipes.Caching
 
             if (response.IsSuccess)
             {
-                _redisClient.StoreAll(response.Success);
+                CacheResponse(response.Success);
 
                 return response.Success
                                .Union(cachedPackages)
@@ -38,6 +38,12 @@ namespace Anderson.PackageAudit.SharedPipes.Caching
             }
 
             return response;
+        }
+
+        private void CacheResponse(IList<TResponse> response)
+        {
+            if(response.Any())
+                _redisClient.StoreAll(response);
         }
     }
 }
