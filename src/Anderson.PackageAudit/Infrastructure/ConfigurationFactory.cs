@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace Anderson.PackageAudit.Factories
+namespace Anderson.PackageAudit.Infrastructure
 {
     public static class ConfigurationFactory
     {

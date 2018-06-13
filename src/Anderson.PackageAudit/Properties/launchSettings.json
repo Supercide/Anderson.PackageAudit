@@ -2,12 +2,13 @@
   "profiles": {
     "Anderson.PackageAudit": {
       "commandName": "Project",
-      "environmentVariables": {
-        "FUNCTION_ENVIRONMENT": "Test",
-        "auth0:issuer": "https://d-magnoxium.eu.auth0.com/",
-        "auth0:domain": "d-magnoxium.eu.auth0.com",
-        "auth0:audience": "https://d-magnoxium.com/packagescanner"
-      }
+        "environmentVariables": {
+            "FUNCTION_ENVIRONMENT": "Test",
+            "auth0:issuer": "https://d-magnoxium.eu.auth0.com/",
+            "auth0:domain": "d-magnoxium.eu.auth0.com",
+            "auth0:audience": "https://d-magnoxium.com/packagescanner",
+            "redis:connectionstring": "localhost:32768"
+        }
     }
   }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Web.Http;
-using Anderson.PackageAudit.Authorization;
+using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anderson.PackageAudit.Errors

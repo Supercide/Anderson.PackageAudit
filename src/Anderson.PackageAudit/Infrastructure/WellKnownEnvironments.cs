@@ -1,4 +1,4 @@
-﻿namespace Anderson.PackageAudit.Factories
+﻿namespace Anderson.PackageAudit.Infrastructure
 {
     public class WellKnownEnvironments
     {

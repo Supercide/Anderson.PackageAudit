@@ -1,4 +1,4 @@
-﻿namespace Anderson.PackageAudit.Authorization
+﻿namespace Anderson.PackageAudit.SharedPipes.Authorization.Constants
 {
     public class WellKnownErrorCodes
     {

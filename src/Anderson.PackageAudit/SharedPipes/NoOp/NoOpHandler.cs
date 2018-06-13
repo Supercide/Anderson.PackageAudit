@@ -1,6 +1,6 @@
 ﻿using Anderson.Pipelines.Definitions;
 
-namespace Anderson.PackageAudit.NoOp
+namespace Anderson.PackageAudit.SharedPipes.NoOp
 {
     public class NoOpHandler<TRequest, TResponse> : PipelineDefinition<TRequest, TResponse>
     {
