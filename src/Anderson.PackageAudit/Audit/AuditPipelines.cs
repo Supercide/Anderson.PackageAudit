@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Anderson.PackageAudit.Errors;
-using Anderson.PackageAudit.Packages;
+using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization;
 using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
 using Anderson.PackageAudit.SharedPipes.Caching;
