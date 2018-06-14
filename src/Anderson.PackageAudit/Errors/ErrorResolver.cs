@@ -12,6 +12,8 @@ namespace Anderson.PackageAudit.Errors
             {
                 case WellKnownErrorCodes.UnAuthorized:
                     return new UnauthorizedResult();
+                case WellKnownErrorCodes.OSSIndexUnavailable:
+                        return new ObjectResult("Unable to communicate with ossindex");
                 default:
                     return new InternalServerErrorResult();
             }

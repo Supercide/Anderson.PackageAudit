@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Anderson.PackageAudit.Audit.Pipes;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization;
 using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
@@ -22,7 +24,7 @@ namespace Anderson.PackageAudit.Audit
                 .StartWith(new AuthorizationHandler<IList<Package>>(TokenValidationParametersFactory.Instance))
                 .ThenWithMutation(new HttpRequestMutation<IList<PackageRequest>, Response<IList<Package>, Error>>())
                 .ThenWith(new CachingPipe<PackageRequest, Package>(RedisClientFactory.Instance))
-                .ThenWith(new NoOpHandler<IList<PackageRequest>, Response<IList<Package>, Error>>(new List<Package>()))
+                .ThenWith(new OSSIndexPipe(ConfigurationFactory.Instance))
                 .Build();
     }
 }
