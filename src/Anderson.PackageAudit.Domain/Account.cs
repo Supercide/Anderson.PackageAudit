@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Anderson.PackageAudit.Audit.Pipes
+namespace Anderson.PackageAudit.Domain
 {
     public class Account : IEquatable<Account>
     {

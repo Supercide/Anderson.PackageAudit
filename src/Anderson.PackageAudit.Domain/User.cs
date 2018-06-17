@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Anderson.PackageAudit.Audit.Pipes
+namespace Anderson.PackageAudit.Domain
 {
     public class User
     {
