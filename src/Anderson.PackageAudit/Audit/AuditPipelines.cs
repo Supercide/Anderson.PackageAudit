@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Anderson.PackageAudit.Audit.Pipes;
 using Anderson.PackageAudit.Errors;
-using Anderson.PackageAudit.Infrastructure;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization;
-using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
 using Anderson.PackageAudit.SharedPipes.Caching;
-using Anderson.PackageAudit.SharedPipes.Caching.Clients;
 using Anderson.PackageAudit.SharedPipes.Mutations;
-using Anderson.PackageAudit.SharedPipes.NoOp;
 using Anderson.Pipelines.Builders;
 using Anderson.Pipelines.Handlers;
 using Anderson.Pipelines.Responses;
@@ -16,15 +13,26 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Audit
 {
-    public class AuditPipelines
+    public class PackagePipelines : IPackagePipelines
     {
-        public static IRequestHandler<HttpRequest, Response<IList<Package>, Error>> AuditPackages => 
+        private readonly PipelineDefinitionBuilder<HttpRequest, Response<IList<Package>, Error>> _builder;
 
-            PipelineDefinitionBuilder<HttpRequest, Response<IList<Package>, Error>>
-                .StartWith(new AuthorizationHandler<IList<Package>>(TokenValidationParametersFactory.Instance))
-                .ThenWithMutation(new HttpRequestMutation<IList<PackageRequest>, Response<IList<Package>, Error>>())
-                .ThenWith(new CachingPipe<PackageRequest, Package>(RedisClientFactory.Instance))
-                .ThenWith(new OSSIndexPipe(ConfigurationFactory.Instance))
+        private readonly Lazy<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>> _auditPipeline;
+
+        public IRequestHandler<HttpRequest, Response<IList<Package>, Error>> AuditPackages => _auditPipeline.Value; 
+
+        public PackagePipelines(PipelineDefinitionBuilder<HttpRequest, Response<IList<Package>, Error>> builder)
+        {
+            _builder = builder;
+            _auditPipeline = new Lazy<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>>(CreateAuditPackagePipeline);
+        }
+
+        private Func<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>> CreateAuditPackagePipeline => 
+
+            () => _builder.StartWith<AuthorizationHandler<IList<Package>>>()
+                .ThenWithMutation<HttpRequestMutationPipe<IList<PackageRequest>, Response<IList<Package>, Error>>, IList<PackageRequest>>()
+                .ThenWith<CachingPipe<PackageRequest, Package>>()
+                .ThenWith<OSSIndexPipe>()
                 .Build();
     }
 }

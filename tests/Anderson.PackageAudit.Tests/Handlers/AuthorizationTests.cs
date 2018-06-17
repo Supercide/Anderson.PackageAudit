@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using Anderson.PackageAudit.Infrastructure;
-using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
+using Anderson.PackageAudit.Audit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests.Handlers
@@ -30,9 +30,6 @@ namespace Anderson.PackageAudit.Tests.Handlers
             Environment.SetEnvironmentVariable("auth0:domain", domain);
             Environment.SetEnvironmentVariable("auth0:audience", audience);
             Environment.SetEnvironmentVariable("redis:connectionstring", redisConnection);
-
-            StaticClassHelper.Reset(typeof(ConfigurationFactory));
-            StaticClassHelper.Reset(typeof(TokenValidationParametersFactory));
         }
           
         [Test]
@@ -40,9 +37,19 @@ namespace Anderson.PackageAudit.Tests.Handlers
         {
             SetEnvironmentVariables();
             var httpRequest = CreateDefaultHttpRequest();
-            IActionResult response = PackageAuditor.Run(httpRequest);
+            var pipelines = GetPackagePipelines();
+            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
+        }
+
+        private static IPackagePipelines GetPackagePipelines()
+        {
+            ServiceCollection collection = new ServiceCollection();
+            Startup.ConfigureServices(collection);
+            var provider = collection.BuildServiceProvider(true);
+            var pipelines = provider.GetService<IPackagePipelines>();
+            return pipelines;
         }
 
         [Test]
@@ -52,7 +59,8 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
-            IActionResult response = PackageAuditor.Run(httpRequest);
+            var pipelines = GetPackagePipelines();
+            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
@@ -64,7 +72,8 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _unknownIssuerToken);
-            IActionResult response = PackageAuditor.Run(httpRequest);
+            var pipelines = GetPackagePipelines();
+            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
@@ -76,7 +85,8 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _unknownAudianceToken);
-            IActionResult response = PackageAuditor.Run(httpRequest);
+            var pipelines = GetPackagePipelines();
+            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
@@ -88,7 +98,8 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
-            IActionResult response = PackageAuditor.Run(httpRequest);
+            var pipelines = GetPackagePipelines();
+            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
 
             Assert.That(response, Is.TypeOf<OkObjectResult>());
         }

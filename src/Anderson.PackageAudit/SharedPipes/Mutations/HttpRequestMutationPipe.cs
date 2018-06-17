@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Anderson.PackageAudit.SharedPipes.Mutations
 {
-    public class HttpRequestMutation<TModel, TResponse> : PipelineMutationDefinition<HttpRequest, TModel, TResponse>
+    public class HttpRequestMutationPipe<TModel, TResponse> : PipelineMutationDefinition<HttpRequest, TModel, TResponse>
     {
         public override TResponse Handle(HttpRequest request)
         {
