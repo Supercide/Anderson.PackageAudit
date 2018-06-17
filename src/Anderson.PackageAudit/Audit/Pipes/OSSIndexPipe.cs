@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
@@ -45,7 +46,7 @@ namespace Anderson.PackageAudit.Audit.Pipes
                     return new Response<IList<Package>, Error>(packages);
                 }
 
-                return new Error(WellKnownErrorCodes.OSSIndexUnavailable, "Unable to connect to sonatype");
+                return AuditError.OssIndexUnavailable;
             }
         }
     }

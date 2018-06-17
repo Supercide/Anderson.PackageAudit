@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.Pipelines.Responses;
 using MongoDB.Driver;

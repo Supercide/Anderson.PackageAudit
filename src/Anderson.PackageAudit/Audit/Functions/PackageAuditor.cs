@@ -1,17 +1,20 @@
-using Anderson.PackageAudit.Audit;
+using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Errors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace Anderson.PackageAudit
+namespace Anderson.PackageAudit.Audit.Functions
 {
     public static class PackageAuditor
     {
         [FunctionName("PackageAuditor")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "packages")]HttpRequest req, [Inject]IPackagePipelines packagePipelines)
+        public static IActionResult Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "packages")]HttpRequest req,
+            [Inject]IErrorResolver<AuditError> auditErrorResolver,
+            [Inject]IPackagePipelines packagePipelines)
         {
             
             var pipeline = packagePipelines.AuditPackages;
@@ -21,7 +24,7 @@ namespace Anderson.PackageAudit
                 return new OkObjectResult(response.Success);
             }
 
-            return response.Error.ToActionResult(ErrorResolver.PackageAuditErrors);
+            return response.Error.ToActionResult(auditErrorResolver.Resolve);
         }
 
         [FunctionName("KeyGeneration")]

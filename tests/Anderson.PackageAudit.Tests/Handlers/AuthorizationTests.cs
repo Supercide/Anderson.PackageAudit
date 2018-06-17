@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 using Anderson.PackageAudit.Audit;
+using Anderson.PackageAudit.Audit.Errors;
+using Anderson.PackageAudit.Audit.Functions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -37,19 +39,22 @@ namespace Anderson.PackageAudit.Tests.Handlers
         {
             SetEnvironmentVariables();
             var httpRequest = CreateDefaultHttpRequest();
-            var pipelines = GetPackagePipelines();
-            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
+            var provider = CreateServiceProvider();
+
+            IActionResult response = PackageAuditor.Run(
+                httpRequest, 
+                provider.GetService<IErrorResolver<AuditError>>(), 
+                provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
 
-        private static IPackagePipelines GetPackagePipelines()
+        private static ServiceProvider CreateServiceProvider()
         {
             ServiceCollection collection = new ServiceCollection();
             Startup.ConfigureServices(collection);
             var provider = collection.BuildServiceProvider(true);
-            var pipelines = provider.GetService<IPackagePipelines>();
-            return pipelines;
+            return provider;
         }
 
         [Test]
@@ -59,8 +64,12 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
-            var pipelines = GetPackagePipelines();
-            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
+            var provider = CreateServiceProvider();
+
+            IActionResult response = PackageAuditor.Run(
+                httpRequest,
+                provider.GetService<IErrorResolver<AuditError>>(),
+                provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
@@ -72,8 +81,12 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _unknownIssuerToken);
-            var pipelines = GetPackagePipelines();
-            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
+            var provider = CreateServiceProvider();
+
+            IActionResult response = PackageAuditor.Run(
+                httpRequest,
+                provider.GetService<IErrorResolver<AuditError>>(),
+                provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
@@ -85,8 +98,12 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _unknownAudianceToken);
-            var pipelines = GetPackagePipelines();
-            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
+            var provider = CreateServiceProvider();
+
+            IActionResult response = PackageAuditor.Run(
+                httpRequest,
+                provider.GetService<IErrorResolver<AuditError>>(),
+                provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
         }
@@ -98,8 +115,12 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
-            var pipelines = GetPackagePipelines();
-            IActionResult response = PackageAuditor.Run(httpRequest, pipelines);
+            var provider = CreateServiceProvider();
+
+            IActionResult response = PackageAuditor.Run(
+                httpRequest,
+                provider.GetService<IErrorResolver<AuditError>>(),
+                provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<OkObjectResult>());
         }

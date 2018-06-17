@@ -29,7 +29,7 @@ namespace Anderson.PackageAudit.Audit
 
         private Func<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>> CreateAuditPackagePipeline => 
 
-            () => _builder.StartWith<AuthorizationHandler<IList<Package>>>()
+            () => _builder.StartWith<AuthorizationPipe<IList<Package>>>()
                 .ThenWithMutation<HttpRequestMutationPipe<IList<PackageRequest>, Response<IList<Package>, Error>>, IList<PackageRequest>>()
                 .ThenWith<CachingPipe<PackageRequest, Package>>()
                 .ThenWith<OSSIndexPipe>()

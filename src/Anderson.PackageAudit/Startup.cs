@@ -31,6 +31,8 @@ namespace Anderson.PackageAudit
             serviceCollection.LoadModule<RedisModule>();
             serviceCollection.LoadModule<PipeModule>();
             serviceCollection.LoadModule<PipelineModule>();
+            serviceCollection.LoadModule<MongoModule>();
+            serviceCollection.LoadModule<ErrorModule>();
         }
     }
 }

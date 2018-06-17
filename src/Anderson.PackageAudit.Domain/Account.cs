@@ -10,8 +10,8 @@ namespace Anderson.PackageAudit.Domain
             AuthenticationId = authenticationId;
         }
 
-        public readonly string Provider;
-        public readonly string AuthenticationId;
+        public string Provider { get; protected set; }
+        public string AuthenticationId { get; protected set; }
 
         public bool Equals(Account other)
         {

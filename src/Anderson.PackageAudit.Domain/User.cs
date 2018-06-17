@@ -7,8 +7,8 @@ namespace Anderson.PackageAudit.Domain
     {
         public Guid Id { get; set; }
 
-        public IEnumerable<Account> Accounts { get; set; }
+        public IList<Account> Accounts { get; set; }
 
-        public IEnumerable<Team>  Teams { get; set; }
+        public IList<Team>  Teams { get; set; }
     }
 }

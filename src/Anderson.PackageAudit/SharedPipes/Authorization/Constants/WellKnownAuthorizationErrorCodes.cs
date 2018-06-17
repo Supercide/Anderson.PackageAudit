@@ -1,8 +1,7 @@
 ﻿namespace Anderson.PackageAudit.SharedPipes.Authorization.Constants
 {
-    public class WellKnownErrorCodes
+    public class WellKnownAuthorizationErrorCodes
     {
         public const string UnAuthorized = "UNAUTHORIZED";
-        public const string OSSIndexUnavailable = "OSSIOFFLINE";
     }
 }
