@@ -6,7 +6,7 @@ using Microsoft.Azure.WebJobs.Host.Bindings;
 using Microsoft.Azure.WebJobs.Host.Protocols;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
     public class InjectBinding : IBinding
     {

@@ -6,7 +6,7 @@ using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.Pipelines.Builders;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
 {
     public class PipeModule : ServiceModule
     {

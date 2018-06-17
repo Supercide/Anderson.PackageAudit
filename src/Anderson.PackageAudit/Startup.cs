@@ -1,4 +1,5 @@
 ﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Host.Config;
 using Microsoft.Extensions.DependencyInjection;

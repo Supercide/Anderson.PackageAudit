@@ -1,7 +1,7 @@
-﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection;
+﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
     public static class ServiceExtensions
     {

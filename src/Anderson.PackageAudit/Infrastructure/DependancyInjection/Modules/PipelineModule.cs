@@ -1,7 +1,7 @@
 ﻿using Anderson.PackageAudit.Audit;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
 {
     public class PipelineModule : ServiceModule
     {

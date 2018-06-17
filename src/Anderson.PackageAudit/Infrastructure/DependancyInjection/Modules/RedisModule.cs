@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Redis;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
 {
     public class RedisModule: ServiceModule
     {

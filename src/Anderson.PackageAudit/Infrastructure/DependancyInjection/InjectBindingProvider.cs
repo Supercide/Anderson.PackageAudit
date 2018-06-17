@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host.Bindings;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
     public class InjectBindingProvider : IBindingProvider
     {

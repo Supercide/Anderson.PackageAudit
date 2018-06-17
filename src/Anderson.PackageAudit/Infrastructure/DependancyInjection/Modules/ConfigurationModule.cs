@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
 {
     public class ConfigurationModule : ServiceModule
     {
