@@ -1,0 +1,110 @@
+﻿@model object
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+<style>
+    .circle-text {
+        width: 50%;
+        margin: 0 auto;
+        max-height: 167px !important;
+    }
+    .circle-text:after {
+        content: "";
+        display: block;
+        width: 100%;
+        height:0;
+        max-height: 167px !important;
+        padding-bottom: 100%;
+        border: 10px solid #4679BD; 
+        -moz-border-radius: 50%; 
+        -webkit-border-radius: 50%; 
+        border-radius: 50%;
+    }
+        .circle-text div {
+            float: left;
+            width: 100%;
+            padding-top: 50%;
+            line-height: 1em;
+            margin-top: -0.5em;
+            text-align: center;
+            color: white;
+            max-height: 167px !important;
+        }
+</style>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Title</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Account" asp-action="Logout">Logout</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login">Login</a>
+                }
+            </nav>
+        </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Title</span>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="">Dashboard</a>
+            <a class="mdl-navigation__link" href="">Projects</a>
+            <a class="mdl-navigation__link" href="">Vulerabilities</a>
+            <a class="mdl-navigation__link" href="">Keys</a>
+            <a class="mdl-navigation__link" href="">Reports</a>
+            <a class="mdl-navigation__link" href="">Settings</a>
+        </nav>
+    </div>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            
+            <div class="mdl-grid">
+                <div class="mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--2-col">High</div>
+                        <div class="mdl-cell mdl-cell--2-col">Medium</div>
+                        <div class="mdl-cell mdl-cell--2-col">Low</div>
+                        <div class="mdl-cell mdl-cell--2-col">Known Issues</div>
+                        <div class="mdl-cell mdl-cell--2-col">Open Issues</div>
+                        <div class="mdl-cell mdl-cell--2-col">Total Users</div>
+
+                        <div class="mdl-cell mdl-cell--2-col">52</div>
+                        <div class="mdl-cell mdl-cell--2-col">87</div>
+                        <div class="mdl-cell mdl-cell--2-col">45</div>
+                        <div class="mdl-cell mdl-cell--2-col">32</div>
+                        <div class="mdl-cell mdl-cell--2-col">5</div>
+                        <div class="mdl-cell mdl-cell--2-col">5</div>
+                    </div>
+                </div>
+
+                <div class="mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--12-col">
+                            Most used vulnerable Pakages
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--12-col">
+                            Most vulnerable projects
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+       </div>
+    </main>
+</div>
+
