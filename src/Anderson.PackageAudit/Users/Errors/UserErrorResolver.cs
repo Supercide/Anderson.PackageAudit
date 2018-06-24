@@ -16,6 +16,8 @@ namespace Anderson.PackageAudit.Users.Errors
                     return new UnauthorizedResult();
                 case WellKnownUserErrors.UserNotFound:
                         return new NotFoundResult();
+                case WellKnownUserErrors.TenantNameTaken:
+                    return new BadRequestErrorMessageResult(error.ErrorMessage);
                 default:
                     return new InternalServerErrorResult();
             }

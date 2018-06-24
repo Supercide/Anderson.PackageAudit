@@ -33,8 +33,7 @@ namespace Anderson.PackageAudit.Users.Functions
             [Inject]IErrorResolver<UserError> errorResolver,
             [Inject]IUserPipelines pipelines)
         {
-            var pipeline = pipelines.EnrolUser;
-            var response = pipeline.Handle(req);
+            var response = pipelines.EnrolUser.Handle(req);
             if (response.IsSuccess)
             {
                 return new OkObjectResult(response.Success);

@@ -4,6 +4,7 @@ using System.Threading;
 using Anderson.PackageAudit.Audit.Pipes;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Users.Errors;
 using Anderson.Pipelines.Responses;
 using MongoDB.Driver;
 
@@ -20,18 +21,26 @@ namespace Anderson.PackageAudit.Users.Pipes
 
         public override Response<User, Error> Handle(EnrolUserRequest request)
         {
-            var account = Thread.CurrentPrincipal.ToAccount();
-
-            User user = new User
+            try
             {
-                Accounts = new List<Account> {account},
-                Teams = new List<Team>(),
-                Id = Guid.NewGuid()
-            };
+                var account = Thread.CurrentPrincipal.ToAccount();
 
-            _userCollection.InsertOne(user);
+                User user = new User
+                {
+                    Accounts = new List<Account> {account},
+                    Tenant = new List<Tenant> { new Tenant(request.TenantName) },
+                    MarketingPreference = request.OptInToMarketing,
+                    Id = Guid.NewGuid()
+                };
 
-            return user;
+                _userCollection.InsertOne(user);
+
+                return user;
+            }
+            catch (MongoDuplicateKeyException)
+            {
+                return UserError.TenantNameTaken;
+            }
         }
     }
 }
