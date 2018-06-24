@@ -1,18 +1,19 @@
 ﻿using System.Web.Http;
+using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Anderson.PackageAudit.Errors
+namespace Anderson.PackageAudit.Audit.Errors
 {
-    public class ErrorResolver
+    public class AuditErrorResolver : IErrorResolver<AuditError>
     {
-        public static IActionResult PackageAuditErrors(Error error)
+        public IActionResult Resolve(Error error)
         {
             switch (error.ErrorCode)
             {
-                case WellKnownErrorCodes.UnAuthorized:
+                case WellKnownAuthorizationErrorCodes.UnAuthorized:
                     return new UnauthorizedResult();
-                case WellKnownErrorCodes.OSSIndexUnavailable:
+                case WellKnownAuditErrors.OSSIndexUnavailable:
                         return new ObjectResult("Unable to communicate with ossindex");
                 default:
                     return new InternalServerErrorResult();

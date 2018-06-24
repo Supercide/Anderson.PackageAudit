@@ -8,7 +8,8 @@
                 "auth0:domain": "d-magnoxium.eu.auth0.com",
                 "auth0:audience": "https://d-magnoxium.com/packagescanner",
                 "redis:connectionstring": "localhost:32768",
-                "ossindex:uri": "https://ossindex.net/v2.0/package"
+                "ossindex:uri": "https://ossindex.net/v2.0/package",
+                "mongodb:connectionstring": "mongodb://localhost/Auditor"
             }
         }
     }

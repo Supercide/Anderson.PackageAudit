@@ -1,6 +1,4 @@
 ﻿using System;
-using Anderson.PackageAudit.Infrastructure;
-using Anderson.PackageAudit.SharedPipes.Authorization.Factories;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests
@@ -23,8 +21,6 @@ namespace Anderson.PackageAudit.Tests
             Environment.SetEnvironmentVariable("auth0:audience", audience);
             Environment.SetEnvironmentVariable("redis:connectionstring", redisConnection);
 
-            StaticClassHelper.Reset(typeof(ConfigurationFactory));
-            StaticClassHelper.Reset(typeof(TokenValidationParametersFactory));
             
         }
     }

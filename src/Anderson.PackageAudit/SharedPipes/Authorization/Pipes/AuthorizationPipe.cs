@@ -12,11 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Anderson.PackageAudit.SharedPipes.Authorization
 {
-    public class AuthorizationHandler<TSuccess> : PipelineDefinition<HttpRequest, Response<TSuccess, Error>>
+    public class AuthorizationPipe<TSuccess> : PipelineDefinition<HttpRequest, Response<TSuccess, Error>>
     {
         private readonly TokenValidationParameters _tokenValidationParameters;
 
-        public AuthorizationHandler(TokenValidationParameters tokenValidationParameters)
+        public AuthorizationPipe(TokenValidationParameters tokenValidationParameters)
         {
             _tokenValidationParameters = tokenValidationParameters;
         }
@@ -34,9 +34,9 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization
 
                 return result.Error;
             }
-            catch (Exception e)
+            catch 
             {
-                return new Error(WellKnownErrorCodes.UnAuthorized, e.Message);
+                return Errors.AuthorizationErrors.Unauthorized;
             }
         }
 
@@ -48,7 +48,7 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization
                 return value.Substring(7);
             }
 
-            return new Error(WellKnownErrorCodes.UnAuthorized, "request failed authentication");
+            return Errors.AuthorizationErrors.Unauthorized;
         }
 
         private ClaimsPrincipal ValidateToken(string token)
