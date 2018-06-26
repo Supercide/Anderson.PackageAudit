@@ -4,6 +4,7 @@ using System.Text;
 using Anderson.PackageAudit.Audit;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Audit.Functions;
+using Anderson.PackageAudit.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;

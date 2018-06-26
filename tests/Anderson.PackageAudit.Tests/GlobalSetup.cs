@@ -20,8 +20,6 @@ namespace Anderson.PackageAudit.Tests
             Environment.SetEnvironmentVariable("auth0:domain", domain);
             Environment.SetEnvironmentVariable("auth0:audience", audience);
             Environment.SetEnvironmentVariable("redis:connectionstring", redisConnection);
-
-            
         }
     }
 }
