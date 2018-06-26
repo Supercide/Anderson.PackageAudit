@@ -3,7 +3,7 @@ using Anderson.PackageAudit.Audit.Pipes;
 using Anderson.PackageAudit.Domain;
 using Anderson.Pipelines.Definitions;
 
-namespace Anderson.PackageAudit.Audit
+namespace Anderson.PackageAudit.SharedPipes.Accounts.Pipes
 {
     public class AccountMutationPipe<TRequest, TResponse> : PipelineMutationDefinition<TRequest, Account, TResponse>
     {

@@ -4,7 +4,13 @@ namespace Anderson.PackageAudit.Domain
 {
     public class Key
     {
-        public string Name { get; set; }
-        public Guid Value { get; set; }
+        public Key(string name, Guid value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public string Name { get; protected set; }
+        public Guid Value { get; protected set; }
     }
 }

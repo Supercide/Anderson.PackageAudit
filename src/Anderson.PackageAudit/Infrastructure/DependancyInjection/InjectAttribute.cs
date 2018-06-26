@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Azure.WebJobs.Description;
 
-namespace Anderson.PackageAudit
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
     [Binding]
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]

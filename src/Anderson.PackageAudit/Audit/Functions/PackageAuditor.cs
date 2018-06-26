@@ -1,5 +1,6 @@
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;

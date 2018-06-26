@@ -9,7 +9,7 @@ namespace Anderson.PackageAudit.Domain
 
         public IList<Account> Accounts { get; set; }
 
-        public IList<Tenant> Tenant { get; set; }
+        public IList<Tenant> Tenants { get; set; }
 
         public bool MarketingPreference { get; set; }
     }

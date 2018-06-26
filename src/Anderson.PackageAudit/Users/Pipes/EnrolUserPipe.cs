@@ -28,7 +28,7 @@ namespace Anderson.PackageAudit.Users.Pipes
                 User user = new User
                 {
                     Accounts = new List<Account> {account},
-                    Tenant = new List<Tenant> { new Tenant(request.TenantName) },
+                    Tenants = new List<Tenant> { new Tenant(request.TenantName) },
                     MarketingPreference = request.OptInToMarketing,
                     Id = Guid.NewGuid()
                 };
