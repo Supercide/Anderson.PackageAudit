@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Anderson.PackageAudit.Tests.Enrollment
+namespace Anderson.PackageAudit.Tests.Integration.Audit
 {
     public class PackageAuditTest
     {
