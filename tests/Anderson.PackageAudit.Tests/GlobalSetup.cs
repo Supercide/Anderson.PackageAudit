@@ -34,7 +34,7 @@ namespace Anderson.PackageAudit.Tests
             
             _host = new AzureFunctionHost(functionDirectory, Port);
 
-            await _host.Start(new Dictionary<string, string>
+            await _host.StartAsync(new Dictionary<string, string>
             {
                 ["FUNCTION_ENVIRONMENT"] = "Test",
                 ["auth0:issuer"] = "https://watusi.eu.auth0.com/",
