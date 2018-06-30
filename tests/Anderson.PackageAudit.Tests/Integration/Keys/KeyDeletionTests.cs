@@ -8,19 +8,19 @@ namespace Anderson.PackageAudit.Tests.Integration.Keys
         [Test]
         public void GivenExistingKey_WhenDeletingKey_ThenDeletesKey()
         {
-            Assert.Fail();
+            Assert.Inconclusive();
         }
 
         [Test]
         public void GivenUnknownKey_WhenDeletingKey_ThenReturns404()
         {
-            Assert.Fail();
+            Assert.Inconclusive();
         }
 
         [Test]
         public void GivenUnknownUser_WhenGeneratingKeyForTenant_ThenReturns401()
         {
-            Assert.Fail();
+            Assert.Inconclusive();
         }
     }
 }

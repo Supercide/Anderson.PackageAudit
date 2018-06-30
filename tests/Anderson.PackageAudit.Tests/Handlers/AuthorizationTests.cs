@@ -6,6 +6,8 @@ using Anderson.PackageAudit.Audit;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Audit.Functions;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
+using Anderson.PackageAudit.SharedPipes.NoOp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -75,40 +77,6 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
-            var provider = CreateServiceProvider();
-
-            IActionResult response = PackageAuditor.Run(
-                httpRequest,
-                provider.GetService<IErrorResolver<AuditError>>(),
-                provider.GetService<IPackagePipelines>());
-
-            Assert.That(response, Is.TypeOf<UnauthorizedResult>());
-        }
-
-        [Test]
-        public void GivenUnknownIssuerOnToken_WhenMakingARequestToFunction_ThenFunctionReturnsUnauthorized()
-        {
-            SetEnvironmentVariables(issuer: "https://example.com/");
-
-            var httpRequest = CreateDefaultHttpRequest();
-            httpRequest.Headers.Add("Authorization", _unknownIssuerToken);
-            var provider = CreateServiceProvider();
-
-            IActionResult response = PackageAuditor.Run(
-                httpRequest,
-                provider.GetService<IErrorResolver<AuditError>>(),
-                provider.GetService<IPackagePipelines>());
-
-            Assert.That(response, Is.TypeOf<UnauthorizedResult>());
-        }
-
-        [Test]
-        public void GivenUnknownAudienceOnToken_WhenMakingARequestToFunction_ThenFunctionReturnsUnauthorized()
-        {
-            SetEnvironmentVariables(audience: "https://example.com/");
-
-            var httpRequest = CreateDefaultHttpRequest();
-            httpRequest.Headers.Add("Authorization", _unknownAudianceToken);
             var provider = CreateServiceProvider();
 
             IActionResult response = PackageAuditor.Run(

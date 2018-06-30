@@ -7,19 +7,19 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         [Test]
         public void GivenKnownKey_WhenAuditingPackages_ThenReturnsResultsForPackages()
         {
-            Assert.Fail();
+            Assert.Inconclusive();
         }
 
         [Test]
         public void GivenUnknownKey_WhenAuditingPackages_ThenReturns401()
         {
-            Assert.Fail();
+            Assert.Inconclusive();
         }
 
         [Test]
         public void GivenKnownKeyWIthInvalidPackages_WhenAuditingPackages_ThenReturns400()
         {
-            Assert.Fail();
+            Assert.Inconclusive();
         }
     }
 }
