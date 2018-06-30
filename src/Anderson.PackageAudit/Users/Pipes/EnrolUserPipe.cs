@@ -4,6 +4,7 @@ using System.Threading;
 using Anderson.PackageAudit.Audit.Pipes;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Anderson.PackageAudit.Users.Errors;
 using Anderson.Pipelines.Responses;
 using MongoDB.Driver;
@@ -23,12 +24,17 @@ namespace Anderson.PackageAudit.Users.Pipes
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(request.TenantName))
+                {
+                    return UserError.TenantNameInvalid;
+                }
+
                 var account = Thread.CurrentPrincipal.ToAccount();
 
                 User user = new User
                 {
                     Accounts = new List<Account> {account},
-                    Tenants = new List<Tenant> { new Tenant(request.TenantName) },
+                    Tenants = new List<Tenant> {new Tenant(request.TenantName)},
                     MarketingPreference = request.OptInToMarketing,
                     Id = Guid.NewGuid()
                 };
@@ -37,9 +43,14 @@ namespace Anderson.PackageAudit.Users.Pipes
 
                 return user;
             }
-            catch (MongoDuplicateKeyException)
+            catch (Exception e)
             {
-                return UserError.TenantNameTaken;
+                if (e.Message.Contains(WellKnownIndexes.AuthenticationIndex))
+                {
+                    return UserError.UserAlreadyEnrolled;
+                }
+
+                return GenericError.InternalServerError;
             }
         }
     }

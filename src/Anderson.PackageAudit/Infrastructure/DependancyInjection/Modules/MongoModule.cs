@@ -1,6 +1,7 @@
 ﻿using Anderson.PackageAudit.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
@@ -21,12 +22,22 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             {
                 var mongodb = provider.GetService<IMongoDatabase>();
                 var collection = mongodb.GetCollection<User>(nameof(User));
-                /*IndexKeysDefinitionBuilder<User> builder = new IndexKeysDefinitionBuilder<User>();
+                var indexDef = new BsonDocument { { "Accounts.Provider", 1 }, { "Accounts.AuthenticationId", 1 } };
+
+                collection.Indexes.CreateOne(indexDef, new CreateIndexOptions
+                {
+                    Unique = true,
+                    Name = WellKnownIndexes.AuthenticationIndex,
+                    Sparse = false
+                });
                 
-                 var indexDef = builder(x => x.Accounts[0].AuthenticationId);
-                collection.CreateOne().CreateOneAsync(indexDef);*/
                 return collection;
             });
         }
+    }
+
+    public class WellKnownIndexes
+    {
+        public const string AuthenticationIndex = "AuthenticationIndex";
     }
 }

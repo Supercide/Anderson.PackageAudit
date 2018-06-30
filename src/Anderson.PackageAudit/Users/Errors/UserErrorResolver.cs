@@ -2,6 +2,7 @@
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
+using Anderson.PackageAudit.SharedPipes.Authorization.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anderson.PackageAudit.Users.Errors
@@ -10,14 +11,12 @@ namespace Anderson.PackageAudit.Users.Errors
     {
         public IActionResult Resolve(Error error)
         {
-            switch (error.ErrorCode)
+            switch (error)
             {
-                case WellKnownAuthorizationErrorCodes.UnAuthorized:
+                case AuthorizationErrors authorizationErrors:
                     return new UnauthorizedResult();
-                case WellKnownUserErrors.UserNotFound:
-                        return new NotFoundResult();
-                case WellKnownUserErrors.TenantNameTaken:
-                    return new BadRequestErrorMessageResult(error.ErrorMessage);
+                case UserError userError:
+                    return new BadRequestErrorMessageResult(userError.ErrorMessage);
                 default:
                     return new InternalServerErrorResult();
             }
