@@ -82,6 +82,7 @@ namespace Anderson.PackageAudit.Tests
             object sender,
             DataReceivedEventArgs e)
         {
+            File.AppendAllLines(_workingDirectory+"/log.txt", new []{e.Data});
             if (!string.IsNullOrWhiteSpace(e.Data) &&
                 e.Data.Contains($"Listening on http://0.0.0.0:{_port}/"))
             {
