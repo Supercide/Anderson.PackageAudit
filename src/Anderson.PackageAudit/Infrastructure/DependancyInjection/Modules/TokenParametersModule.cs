@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
@@ -15,13 +16,25 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             {
                 var configuration = provider.GetService<IConfiguration>();
                 var openIdConfig = provider.GetService<OpenIdConnectConfiguration>();
-                return new TokenValidationParameters
+                var tokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = configuration["auth0:issuer"],
                     ValidAudiences = new[] { configuration["auth0:audience"] },
                     IssuerSigningKeys = openIdConfig.SigningKeys,
-                    ValidateLifetime = configuration["FUNCTION_ENVIRONMENT"] != WellKnownEnvironments.Test,
+                    
                 };
+
+                if (configuration["FUNCTION_ENVIRONMENT"] == WellKnownEnvironments.Test)
+                {
+                    tokenValidationParameters.ValidateLifetime = false;
+                    tokenValidationParameters.ValidateIssuer = false;
+                    tokenValidationParameters.ValidateIssuerSigningKey = false;
+                    tokenValidationParameters.ValidateActor = false;
+                    tokenValidationParameters.ValidateAudience = false;
+                    tokenValidationParameters.SignatureValidator = (token, parameters) => new JwtSecurityToken(token);
+                }
+
+                return tokenValidationParameters;
             });
 
             serviceCollection.AddSingleton(provider =>
@@ -37,6 +50,11 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
                     .GetAwaiter()
                     .GetResult();
             });
+        }
+
+        private SecurityToken SignatureValidator(string token, TokenValidationParameters validationparameters)
+        {
+            return new JwtSecurityToken(token);
         }
     }
 }

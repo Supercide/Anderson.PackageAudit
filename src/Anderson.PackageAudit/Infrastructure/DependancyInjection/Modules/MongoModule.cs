@@ -20,7 +20,12 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             serviceCollection.AddSingleton(provider =>
             {
                 var mongodb = provider.GetService<IMongoDatabase>();
-                return mongodb.GetCollection<User>(nameof(User));
+                var collection = mongodb.GetCollection<User>(nameof(User));
+                /*IndexKeysDefinitionBuilder<User> builder = new IndexKeysDefinitionBuilder<User>();
+                
+                 var indexDef = builder(x => x.Accounts[0].AuthenticationId);
+                collection.CreateOne().CreateOneAsync(indexDef);*/
+                return collection;
             });
         }
     }
