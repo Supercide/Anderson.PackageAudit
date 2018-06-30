@@ -34,9 +34,6 @@ namespace Anderson.PackageAudit.Tests
 #else
             var functionDirectory = Path.Combine(rootDirectory, $@"src\{Project}\bin\Release\netstandard2.0");
 #endif
-
-
-
             _host = new AzureFunctionHost(functionDirectory, Port);
 
             await _host.StartAsync(new Dictionary<string, string>
