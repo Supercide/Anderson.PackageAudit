@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,6 +82,8 @@ namespace Anderson.PackageAudit.Tests
             object sender,
             DataReceivedEventArgs e)
         {
+            File.AppendAllLines("C:\\logs\\test.txt", new[] { e.Data });
+
             if (!string.IsNullOrWhiteSpace(e.Data) &&
                 e.Data.Contains($"Listening on http://0.0.0.0:{_port}/"))
             {

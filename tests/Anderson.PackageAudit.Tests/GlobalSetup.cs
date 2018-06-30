@@ -29,9 +29,14 @@ namespace Anderson.PackageAudit.Tests
         public async Task Setup()
         {
             var rootDirectory = DirectoryHelper.GetRootDirectory();
+#if DEBUG
             var functionDirectory = Path.Combine(rootDirectory, $@"src\{Project}\bin\Debug\netstandard2.0");
+#else
+            var functionDirectory = Path.Combine(rootDirectory, $@"src\{Project}\bin\Release\netstandard2.0");
+#endif
 
-            
+
+
             _host = new AzureFunctionHost(functionDirectory, Port);
 
             await _host.StartAsync(new Dictionary<string, string>
