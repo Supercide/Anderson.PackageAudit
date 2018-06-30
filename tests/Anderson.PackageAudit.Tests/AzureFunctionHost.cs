@@ -14,6 +14,7 @@ namespace Anderson.PackageAudit.Tests
         private readonly int _port;
         private readonly string _workingDirectory;
         readonly ManualResetEvent _manualReset = new ManualResetEvent(false);
+        private readonly object _lock = new object();
 
         public AzureFunctionHost(string workingDirectory, int port)
         {
@@ -82,7 +83,11 @@ namespace Anderson.PackageAudit.Tests
             object sender,
             DataReceivedEventArgs e)
         {
-            File.AppendAllLines(AppDomain.CurrentDomain.BaseDirectory+"/log.txt", new []{e.Data});
+            lock (_lock)
+            {
+                File.AppendAllLines(AppDomain.CurrentDomain.BaseDirectory + "/log.txt", new[] { e.Data });
+            }
+            
             if (!string.IsNullOrWhiteSpace(e.Data) &&
                 e.Data.Contains($"Listening on http://0.0.0.0:{_port}/"))
             {
