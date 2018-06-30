@@ -1,28 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Helpers;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests
 {
+    public class DirectoryHelper
+    {
+        public static string GetRootDirectory()
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var rootDirectory = baseDirectory.Substring(0, baseDirectory.IndexOf("tests"));
+            return rootDirectory;
+        }
+    }
+
     [SetUpFixture]
     public class GlobalSetup
     {
-    
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            string environment = "Test";
-            string issuer = "https://watusi.eu.auth0.com/";
-            string domain = "watusi.eu.auth0.com";
-            string audience = "https://Watusi.Audit.Api";
-            string redisConnection = "localhost:32768";
-            string mongodbConnection = "mongodb://localhost/AuditorTests";
+        private AzureFunctionHost _host;
+        private const string Project = "Anderson.PackageAudit";
+        public const int Port = 1337;
 
-            Environment.SetEnvironmentVariable("FUNCTION_ENVIRONMENT", environment);
-            Environment.SetEnvironmentVariable("auth0:issuer", issuer);
-            Environment.SetEnvironmentVariable("auth0:domain", domain);
-            Environment.SetEnvironmentVariable("auth0:audience", audience);
-            Environment.SetEnvironmentVariable("redis:connectionstring", redisConnection);
-            Environment.SetEnvironmentVariable("mongodb:connectionstring", mongodbConnection);
+        [OneTimeSetUp]
+        public async Task Setup()
+        {
+            var rootDirectory = DirectoryHelper.GetRootDirectory();
+            var functionDirectory = Path.Combine(rootDirectory, $@"src\{Project}\bin\Debug\netstandard2.0");
+
+            
+            _host = new AzureFunctionHost(functionDirectory, Port);
+
+            await _host.Start(new Dictionary<string, string>
+            {
+                ["FUNCTION_ENVIRONMENT"] = "Test",
+                ["auth0:issuer"] = "https://watusi.eu.auth0.com/",
+                ["auth0:domain"] = "watusi.eu.auth0.com",
+                ["auth0:audience"] = "https://Watusi.Audit.Api",
+                ["redis:connectionstring"] = "localhost:32768",
+                ["mongodb:connectionstring"] = "mongodb://localhost/AuditorTests"
+            });
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            _host.Dispose();
         }
     }
 }
