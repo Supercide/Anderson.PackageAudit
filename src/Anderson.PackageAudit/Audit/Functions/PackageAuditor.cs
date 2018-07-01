@@ -1,10 +1,10 @@
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace Anderson.PackageAudit.Audit.Functions
 {
@@ -25,14 +25,6 @@ namespace Anderson.PackageAudit.Audit.Functions
             }
 
             return response.Error.ToActionResult(auditErrorResolver.Resolve);
-        }
-
-        [FunctionName("KeyGeneration")]
-        public static IActionResult GenerateKey(
-            [HttpTrigger(AuthorizationLevel.Anonymous, new []{ "post", "get" }, Route = "keys")]HttpRequest req,
-            [Inject]IConfiguration config)
-        {
-            return new OkResult();
         }
     }
 }

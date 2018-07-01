@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Anderson.PackageAudit.Audit.Pipes;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.PackageModels;
-using Anderson.PackageAudit.SharedPipes.Authorization;
+using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Caching;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.Pipelines.Builders;

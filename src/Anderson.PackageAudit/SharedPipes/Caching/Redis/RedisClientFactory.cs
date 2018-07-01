@@ -1,8 +1,7 @@
-﻿using Anderson.PackageAudit.SharedPipes.Caching.Redis;
-using ServiceStack.Redis;
+﻿using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
 
-namespace Anderson.PackageAudit
+namespace Anderson.PackageAudit.SharedPipes.Caching.Redis
 {
     public class RedisClientFactory<T> : IRedisClientFactory<T>
     {

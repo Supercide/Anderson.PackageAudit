@@ -1,6 +1,7 @@
 using Anderson.PackageAudit.Audit;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Users.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace Anderson.PackageAudit.Users.Functions
     {
         [FunctionName("RetriveUserDetails")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "users/current")]HttpRequest req, 
+            [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "users")]HttpRequest req, 
             [Inject]IErrorResolver<UserError> errorResolver,
             [Inject]IUserPipelines pipelines)
         {
@@ -33,8 +34,7 @@ namespace Anderson.PackageAudit.Users.Functions
             [Inject]IErrorResolver<UserError> errorResolver,
             [Inject]IUserPipelines pipelines)
         {
-            var pipeline = pipelines.EnrolUser;
-            var response = pipeline.Handle(req);
+            var response = pipelines.EnrolUser.Handle(req);
             if (response.IsSuccess)
             {
                 return new OkObjectResult(response.Success);

@@ -15,4 +15,10 @@
     <ProjectReference Include="..\..\src\Anderson.PackageAudit\Anderson.PackageAudit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Integration\MarketingPreferenceTest\" />
+    <Folder Include="Integration\TenantTests\" />
+    <Folder Include="Unit\" />
+  </ItemGroup>
+
 </Project>

@@ -2,6 +2,7 @@
 {
     public abstract class Error
     {
+        
         public string ErrorCode { get; }
         public string ErrorMessage { get; }
 

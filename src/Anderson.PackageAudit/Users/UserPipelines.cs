@@ -2,7 +2,9 @@
 using Anderson.PackageAudit.Audit;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.SharedPipes.Accounts.Pipes;
 using Anderson.PackageAudit.SharedPipes.Authorization;
+using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.PackageAudit.Users.Pipes;
 using Anderson.Pipelines.Builders;

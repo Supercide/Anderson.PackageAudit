@@ -1,3 +1,4 @@
+#addin nuget:?package=Cake.Npm
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,16 @@ var solution                = GetFiles("./**/*.sln").FirstOrDefault();
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP
 ///////////////////////////////////////////////////////////////////////////////
+Task("Setup")
+    .IsDependentOn("Check")
+	.Does(() => {
+		var settings = new NpmInstallSettings 
+        {
+            Global = true
+        };
+		settings.AddPackage("azure-functions-core-tools@core --unsafe-perm true");
+		NpmInstall(settings);
+	});
 
 Task("Check")
     .WithCriteria(() => IsSolutionMissing(solution))
@@ -25,7 +36,7 @@ Task("Check")
     });
 
 Task("Clean")
-    .IsDependentOn("Check")
+    .IsDependentOn("Setup")
     .Does(() => {
         CleanDirectories("./**/bin");
         CleanDirectories("./**/obj");

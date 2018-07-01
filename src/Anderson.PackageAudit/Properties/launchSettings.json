@@ -4,9 +4,9 @@
             "commandName": "Project",
             "environmentVariables": {
                 "FUNCTION_ENVIRONMENT": "Test",
-                "auth0:issuer": "https://d-magnoxium.eu.auth0.com/",
-                "auth0:domain": "d-magnoxium.eu.auth0.com",
-                "auth0:audience": "https://d-magnoxium.com/packagescanner",
+                "auth0:issuer": "https://watusi.eu.auth0.com/",
+                "auth0:domain": "watusi.eu.auth0.com",
+                "auth0:audience": "https://Watusi.Audit.Api",
                 "redis:connectionstring": "localhost:32768",
                 "ossindex:uri": "https://ossindex.net/v2.0/package",
                 "mongodb:connectionstring": "mongodb://localhost/Auditor"

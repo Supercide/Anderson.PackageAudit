@@ -1,4 +1,4 @@
-$version = "0.5.0"
+$version = "0.5.1"
 
 if(!($Env:BUILD_SOURCEBRANCHNAME -eq "master"))
 {

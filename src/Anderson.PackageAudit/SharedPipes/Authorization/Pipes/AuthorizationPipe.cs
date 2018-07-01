@@ -4,13 +4,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using Anderson.PackageAudit.Errors;
-using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Anderson.PackageAudit.SharedPipes.Authorization
+namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
 {
     public class AuthorizationPipe<TSuccess> : PipelineDefinition<HttpRequest, Response<TSuccess, Error>>
     {
@@ -34,7 +33,7 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization
 
                 return result.Error;
             }
-            catch 
+            catch (Exception e)
             {
                 return Errors.AuthorizationErrors.Unauthorized;
             }

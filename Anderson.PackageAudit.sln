@@ -22,8 +22,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anderson.PackageAudit.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anderson.PackageAudit.Domain", "src\Anderson.PackageAudit.Domain\Anderson.PackageAudit.Domain.csproj", "{042C7339-3FFD-4207-ADCB-5BB59D3646B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anderson.PackageAudit.Web", "src\Anderson.PackageAudit.Web\Anderson.PackageAudit.Web.csproj", "{4CD2A411-D576-4661-ACCF-1FCE80481DE3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,10 +40,6 @@ Global
 		{042C7339-3FFD-4207-ADCB-5BB59D3646B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{042C7339-3FFD-4207-ADCB-5BB59D3646B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{042C7339-3FFD-4207-ADCB-5BB59D3646B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CD2A411-D576-4661-ACCF-1FCE80481DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CD2A411-D576-4661-ACCF-1FCE80481DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CD2A411-D576-4661-ACCF-1FCE80481DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CD2A411-D576-4661-ACCF-1FCE80481DE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,7 +48,6 @@ Global
 		{2722FC6F-7EAE-499E-AEC8-FEF974421506} = {ABD1AF97-FF53-4EBE-AA38-1F5423A6A666}
 		{FCFC0B47-08E4-4A0D-AC4A-3E94D1B4BB33} = {2745F778-EC94-48BE-A300-B73EFF5169DC}
 		{042C7339-3FFD-4207-ADCB-5BB59D3646B3} = {ABD1AF97-FF53-4EBE-AA38-1F5423A6A666}
-		{4CD2A411-D576-4661-ACCF-1FCE80481DE3} = {ABD1AF97-FF53-4EBE-AA38-1F5423A6A666}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E4031A5A-AEBF-4BC3-934C-B9CD0631EC4E}
