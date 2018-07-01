@@ -9,7 +9,7 @@
                 "auth0:audience": "https://Watusi.Audit.Api",
                 "redis:connectionstring": "localhost:32768",
                 "ossindex:uri": "https://ossindex.net/v2.0/package",
-                "mongodb:connectionstring": "mongodb://localhost/Auditor"
+                "mongodb:connectionstring": "mongodb://localhost/AuditorTests"
             }
         }
     }

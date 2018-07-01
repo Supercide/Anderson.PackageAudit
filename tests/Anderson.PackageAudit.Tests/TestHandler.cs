@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;

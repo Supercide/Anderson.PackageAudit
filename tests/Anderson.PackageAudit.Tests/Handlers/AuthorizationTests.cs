@@ -5,6 +5,7 @@ using System.Text;
 using Anderson.PackageAudit.Audit;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Audit.Functions;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.NoOp;
@@ -56,7 +57,7 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             IActionResult response = PackageAuditor.Run(
                 httpRequest, 
-                provider.GetService<IErrorResolver<AuditError>>(), 
+                provider.GetService<IErrorResolver<AuditError, IActionResult>>(), 
                 provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
@@ -77,11 +78,12 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
+            httpRequest.Headers.Add("X-API-KEY", $"{Guid.NewGuid()}");
             var provider = CreateServiceProvider();
 
             IActionResult response = PackageAuditor.Run(
                 httpRequest,
-                provider.GetService<IErrorResolver<AuditError>>(),
+                provider.GetService<IErrorResolver<AuditError, IActionResult>>(),
                 provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<UnauthorizedResult>());
@@ -94,11 +96,13 @@ namespace Anderson.PackageAudit.Tests.Handlers
 
             var httpRequest = CreateDefaultHttpRequest();
             httpRequest.Headers.Add("Authorization", _token);
-            var provider = CreateServiceProvider();
+            httpRequest.Headers.Add("X-API-KEY", $"{Guid.NewGuid()}");
+
+        var provider = CreateServiceProvider();
 
             IActionResult response = PackageAuditor.Run(
                 httpRequest,
-                provider.GetService<IErrorResolver<AuditError>>(),
+                provider.GetService<IErrorResolver<AuditError, IActionResult>>(),
                 provider.GetService<IPackagePipelines>());
 
             Assert.That(response, Is.TypeOf<OkObjectResult>());

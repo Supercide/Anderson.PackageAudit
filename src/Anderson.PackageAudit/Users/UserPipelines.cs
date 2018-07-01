@@ -1,5 +1,6 @@
 ﻿using System;
 using Anderson.PackageAudit.Audit;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Accounts.Pipes;

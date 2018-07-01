@@ -1,11 +1,12 @@
 ﻿using System.Web.Http;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anderson.PackageAudit.Audit.Errors
 {
-    public class AuditErrorResolver : IErrorResolver<AuditError>
+    public class AuditErrorResolver : IErrorResolver<AuditError, IActionResult>
     {
         public IActionResult Resolve(Error error)
         {

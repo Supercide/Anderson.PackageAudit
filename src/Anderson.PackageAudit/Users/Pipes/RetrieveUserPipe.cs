@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Users.Errors;

@@ -1,16 +1,8 @@
-﻿using Anderson.PackageAudit.Audit.Errors;
-using Anderson.PackageAudit.Domain;
-using Anderson.PackageAudit.Errors;
-using Anderson.Pipelines.Responses;
+﻿using Anderson.PackageAudit.Core.Errors;
 
 namespace Anderson.PackageAudit.Users.Errors
 {
-    public class KeyError : Error
-    {
-        public KeyError(string errorCode, string errorMessage) : base(errorCode, errorMessage)
-        {
-        }
-    }
+    
 
     public class UserError : Error
     {

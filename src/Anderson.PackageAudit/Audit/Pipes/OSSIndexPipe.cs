@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Audit.Errors;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;

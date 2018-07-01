@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Anderson.PackageAudit.Audit.Pipes;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
@@ -30,6 +31,7 @@ namespace Anderson.PackageAudit.Audit
         private Func<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>> CreateAuditPackagePipeline => 
 
             () => _builder.StartWith<AuthorizationPipe<IList<Package>>>()
+                .ThenWith<KeyAuthorizationPipe<IList<Package>>>()
                 .ThenWithMutation<HttpRequestMutationPipe<IList<PackageRequest>, Response<IList<Package>, Error>>, IList<PackageRequest>>()
                 .ThenWith<CachingPipe<PackageRequest, Package>>()
                 .ThenWith<OSSIndexPipe>()

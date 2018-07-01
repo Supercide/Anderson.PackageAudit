@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Anderson.PackageAudit.Audit.Pipes;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;

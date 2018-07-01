@@ -1,5 +1,6 @@
 ﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
+using Anderson.PackageAudit.Keys.Module;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Host.Config;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace Anderson.PackageAudit
             serviceCollection.LoadModule<TokenParametersModule>();
             serviceCollection.LoadModule<RedisModule>();
             serviceCollection.LoadModule<PipeModule>();
+            serviceCollection.LoadModule<KeyModule>();
             serviceCollection.LoadModule<PipelineModule>();
             serviceCollection.LoadModule<MongoModule>();
             serviceCollection.LoadModule<ErrorModule>();

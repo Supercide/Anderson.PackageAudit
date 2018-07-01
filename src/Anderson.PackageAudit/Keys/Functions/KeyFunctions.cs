@@ -1,5 +1,9 @@
-﻿using Anderson.PackageAudit.Errors;
+﻿using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Domain;
+using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Errors.Extensions;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
+using Anderson.PackageAudit.Keys.Errors;
 using Anderson.PackageAudit.Keys.Pipelines;
 using Anderson.PackageAudit.Users.Errors;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +18,7 @@ namespace Anderson.PackageAudit.Keys.Functions
         [FunctionName("KeyGeneration")]
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "Post", Route = "keys")]HttpRequest req,
-            [Inject]IErrorResolver<KeyError> errorResolver,
+            [Inject]IErrorResolver<KeyError, IActionResult> errorResolver,
             [Inject]IKeyPipelines pipelines)
         {
             var pipeline = pipelines.GenerateKey;

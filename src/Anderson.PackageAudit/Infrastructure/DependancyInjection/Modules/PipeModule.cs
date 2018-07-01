@@ -28,6 +28,7 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
 
             serviceCollection.AddSingleton(typeof(PipelineDefinitionBuilder<,>));
             serviceCollection.AddSingleton(typeof(AuthorizationPipe<>));
+            serviceCollection.AddSingleton(typeof(KeyAuthorizationPipe<>));
             serviceCollection.AddSingleton(typeof(AccountMutationPipe<,>));
             serviceCollection.AddSingleton(typeof(HttpRequestMutationPipe<,>));
             serviceCollection.AddSingleton(typeof(CachingPipe<,>));

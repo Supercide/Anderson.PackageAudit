@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
@@ -12,21 +14,21 @@ namespace Anderson.PackageAudit.Keys.Pipelines
 {
     public interface IKeyPipelines
     {
-        IRequestHandler<HttpRequest, Response<Key, Error>> GenerateKey { get; }
+        IRequestHandler<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> GenerateKey { get; }
     }
 
     public class KeyPiplines : IKeyPipelines
     {
-        private readonly PipelineDefinitionBuilder<HttpRequest, Response<Key, Error>> _builder;
+        private readonly PipelineDefinitionBuilder<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> _builder;
 
-        public KeyPiplines(PipelineDefinitionBuilder<HttpRequest, Response<Key, Error>> builder)
+        public KeyPiplines(PipelineDefinitionBuilder<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> builder)
         {
             _builder = builder;
         }
 
-        public IRequestHandler<HttpRequest, Response<Key, Error>> GenerateKey => 
-            _builder.StartWith<AuthorizationPipe<Key>>()
-                    .ThenWithMutation<HttpRequestMutationPipe<KeyRequest, Response<Key, Error>>, KeyRequest>()
+        public IRequestHandler<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> GenerateKey => 
+            _builder.StartWith<AuthorizationPipe<KeyValuePair<string, Guid>>>()
+                    .ThenWithMutation<HttpRequestMutationPipe<KeyRequest, Response<KeyValuePair<string, Guid>, Error>>, KeyRequest>()
                     .ThenWith<KeyCreationPipe>()
                     .Build();
     }
