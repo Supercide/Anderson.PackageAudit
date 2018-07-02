@@ -23,11 +23,11 @@ namespace Anderson.PackageAudit.Tests
     {
         private AzureFunctionHost _host;
         private const string Project = "Anderson.PackageAudit";
-        public const int Port = 1337;
+        public const int Port = 7071;
 
         [OneTimeSetUp]
         public async Task Setup()
-        {
+       {
             var rootDirectory = DirectoryHelper.GetRootDirectory();
 #if DEBUG
             var functionDirectory = Path.Combine(rootDirectory, $@"src\{Project}\bin\Debug\netstandard2.0");
@@ -43,7 +43,8 @@ namespace Anderson.PackageAudit.Tests
                 ["auth0:domain"] = "watusi.eu.auth0.com",
                 ["auth0:audience"] = "https://Watusi.Audit.Api",
                 ["redis:connectionstring"] = "localhost:32768",
-                ["mongodb:connectionstring"] = "mongodb://localhost/AuditorTests"
+                ["mongodb:connectionstring"] = "mongodb://localhost/AuditorTests",
+                ["ossindex:uri"] = "https://ossindex.net/v2.0/package"
             });
         }
 

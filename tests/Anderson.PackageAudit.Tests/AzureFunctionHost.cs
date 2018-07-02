@@ -70,7 +70,7 @@ namespace Anderson.PackageAudit.Tests
             {
                 case PlatformID.MacOSX:
                 case PlatformID.Unix:
-                    return ("/bin/bash", $"-c \"func host start --port {_port}\"");
+                    return ("sh", $"-c \"func host start --port {_port}\"");
                 case PlatformID.Win32NT:
                     return ("cmd.exe", $"/k func host start --port {_port}");
                 default:

@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Anderson.PackageAudit.Audit.Errors;
-using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Errors.Extensions;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +15,9 @@ namespace Anderson.PackageAudit.Audit.Functions
         [FunctionName("PackageAuditor")]
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "packages")]HttpRequest req,
-            [Inject]IErrorResolver<AuditError> auditErrorResolver,
+            [Inject]IErrorResolver<AuditError, IActionResult> auditErrorResolver,
             [Inject]IPackagePipelines packagePipelines)
         {
-            
             var pipeline = packagePipelines.AuditPackages;
             var response = pipeline.Handle(req);
             if (response.IsSuccess)

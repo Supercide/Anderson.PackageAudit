@@ -1,4 +1,5 @@
-﻿using Anderson.PackageAudit.Domain;
+﻿using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.Pipelines.Handlers;
 using Anderson.Pipelines.Responses;

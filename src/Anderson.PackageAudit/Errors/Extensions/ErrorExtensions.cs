@@ -1,7 +1,8 @@
 ﻿using System;
+using Anderson.PackageAudit.Core.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Anderson.PackageAudit.Errors
+namespace Anderson.PackageAudit.Errors.Extensions
 {
     public static class ErrorExtensions
     {

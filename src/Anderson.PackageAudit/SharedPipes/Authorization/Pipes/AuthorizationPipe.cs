@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
@@ -33,7 +35,7 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
 
                 return result.Error;
             }
-            catch (Exception e)
+            catch (SecurityTokenValidationException e)
             {
                 return Errors.AuthorizationErrors.Unauthorized;
             }

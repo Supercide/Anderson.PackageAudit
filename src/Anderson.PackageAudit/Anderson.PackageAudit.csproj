@@ -17,6 +17,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.4" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Anderson.PackageAudit.Core\Anderson.PackageAudit.Core.csproj" />
     <ProjectReference Include="..\Anderson.PackageAudit.Domain\Anderson.PackageAudit.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>

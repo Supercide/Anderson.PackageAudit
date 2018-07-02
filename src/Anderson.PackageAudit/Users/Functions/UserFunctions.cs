@@ -1,6 +1,8 @@
 using Anderson.PackageAudit.Audit;
 using Anderson.PackageAudit.Audit.Errors;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Errors.Extensions;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Users.Errors;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +17,7 @@ namespace Anderson.PackageAudit.Users.Functions
         [FunctionName("RetriveUserDetails")]
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "users")]HttpRequest req, 
-            [Inject]IErrorResolver<UserError> errorResolver,
+            [Inject]IErrorResolver<UserError, IActionResult> errorResolver,
             [Inject]IUserPipelines pipelines)
         {
             var pipeline = pipelines.RetrieveCurrentUser;
@@ -31,7 +33,7 @@ namespace Anderson.PackageAudit.Users.Functions
         [FunctionName("EnrolUser")]
         public static IActionResult Enrol(
             [HttpTrigger(AuthorizationLevel.Anonymous, "Post", Route = "users")]HttpRequest req,
-            [Inject]IErrorResolver<UserError> errorResolver,
+            [Inject]IErrorResolver<UserError, IActionResult> errorResolver,
             [Inject]IUserPipelines pipelines)
         {
             var response = pipelines.EnrolUser.Handle(req);

@@ -1,17 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Domain;
+using Anderson.PackageAudit.Tests.Integration.Audit;
 using Anderson.PackageAudit.Users;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 
-namespace Anderson.PackageAudit.Tests.Integration.Enrollment
+namespace Anderson.PackageAudit.Tests.Integration.Users
 {
+    class UserTests
+    {
+        private HttpClient _client;
+
+        [SetUp]
+        public void Setup()
+        {
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri($"http://localhost:{GlobalSetup.Port}")
+            };
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
+        }
+
+        [Test]
+        public async Task GivenKnownUser_WhenRetrievingUserDetails_ThenReturnsUserDetails()
+        {
+            StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
+            var context = await builder.WithUser(false, "someName")
+                                       .WithKey("some key", "someName")
+                                       .Build();
+
+            var response = await _client.GetAsync("/api/users");
+            var user = await response.Content.ReadAsAsync<User>();
+            using (new AssertionScope())
+            {
+                user.Tenants.Count.Should().Be(1);
+                user.Tenants[0].Name.Should().Be("someName");
+                user.Tenants[0].Keys.Count.Should().Be(1);
+                user.Tenants[0].Keys.Any(x => x.Name == "some key").Should().BeTrue();
+            }
+        }
+
+        [Test]
+        public async Task GivenUnEnrolledUser_WhenRetrievingUserDetails_ThenReturnsNotFound()
+        {
+            var response = await _client.GetAsync("/api/users");
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+    }
     class UserEnrollmentTests
     {
         private HttpClient _client;

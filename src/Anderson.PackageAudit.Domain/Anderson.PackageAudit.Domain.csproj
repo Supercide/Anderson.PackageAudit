@@ -4,4 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Anderson.Pipelines" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Anderson.PackageAudit.Core\Anderson.PackageAudit.Core.csproj" />
+  </ItemGroup>
+
 </Project>

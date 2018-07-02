@@ -1,8 +1,8 @@
-﻿namespace Anderson.PackageAudit.Errors
+﻿namespace Anderson.PackageAudit.Core.Errors
 {
     public abstract class Error
     {
-        
+
         public string ErrorCode { get; }
         public string ErrorMessage { get; }
 

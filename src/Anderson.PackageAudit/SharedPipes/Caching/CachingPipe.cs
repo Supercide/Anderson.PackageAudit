@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
