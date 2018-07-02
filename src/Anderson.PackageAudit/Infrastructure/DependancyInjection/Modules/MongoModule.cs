@@ -1,7 +1,7 @@
-﻿using Anderson.PackageAudit.Domain;
+﻿using System.Security.Authentication;
+using Anderson.PackageAudit.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
@@ -13,24 +13,23 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             serviceCollection.AddSingleton(provider =>
             {
                 var configuration = provider.GetService<IConfiguration>();
-                MongoUrl url = new MongoUrl(configuration["mongodb:connectionstring"]);
-                MongoClient client = new MongoClient(url);
-                return client.GetDatabase(url.DatabaseName);
+
+                var mongoUrl = new MongoUrl(configuration["mongodb:connectionstring"]);
+                MongoClientSettings settings = MongoClientSettings.FromUrl(mongoUrl);
+                settings.SslSettings = new SslSettings
+                {
+                    EnabledSslProtocols = SslProtocols.Tls12
+                };
+
+                var mongoClient = new MongoClient(settings);
+                return mongoClient.GetDatabase(mongoUrl.DatabaseName);
+                
             });
 
             serviceCollection.AddSingleton(provider =>
             {
                 var mongodb = provider.GetService<IMongoDatabase>();
                 var collection = mongodb.GetCollection<User>(nameof(User));
-                var indexDef = new BsonDocument { { "Accounts.Provider", 1 }, { "Accounts.AuthenticationId", 1 } };
-
-                collection.Indexes.CreateOne(indexDef, new CreateIndexOptions
-                {
-                    Unique = true,
-                    Name = WellKnownIndexes.AuthenticationIndex,
-                    Sparse = false
-                });
-                
                 return collection;
             });
         }
