@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Keys.Pipelines;
 using Anderson.PackageAudit.PackageModels;
-using Anderson.PackageAudit.Tests.Integration.Enrollment;
+using Anderson.PackageAudit.Tests.Integration.Users;
 using Anderson.PackageAudit.Users;
 using NUnit.Framework;
 
@@ -77,7 +77,8 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         {
             _client = new HttpClient
             {
-                BaseAddress = new Uri($"http://localhost:{GlobalSetup.Port}")
+                BaseAddress = new Uri($"http://localhost:{GlobalSetup.Port}"),
+                Timeout = TimeSpan.FromDays(1)
             };
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));

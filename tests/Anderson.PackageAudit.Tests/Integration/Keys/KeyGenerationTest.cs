@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Keys.Pipelines;
-using Anderson.PackageAudit.Tests.Integration.Enrollment;
+using Anderson.PackageAudit.Tests.Integration.Users;
 using Anderson.PackageAudit.Users;
 using NUnit.Framework;
 
