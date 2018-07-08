@@ -9,42 +9,35 @@ using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Keys.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Errors;
 using Anderson.Pipelines.Responses;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Keys.Pipelines
 {
-    public class KeyCreationPipe : Anderson.Pipelines.Definitions.PipelineDefinition<KeyRequest, Response<KeyValuePair<string, Guid>, Error>>
+    public class KeyCreationPipe : Anderson.Pipelines.Definitions.PipelineDefinition<KeyRequest, Response<Key, Error>>
     {
-        private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<Tenant> _tenantCollection;
 
-        public KeyCreationPipe(IMongoCollection<User> userCollection)
+        public KeyCreationPipe(IMongoCollection<Tenant> tenantCollection)
         {
-            _userCollection = userCollection;
+            _tenantCollection = tenantCollection;
         }
 
-        public override Response<KeyValuePair<string, Guid>, Error> Handle(KeyRequest request)
+        public override Response<Key, Error> Handle(KeyRequest request)
         {
             var account = Thread.CurrentPrincipal.ToAccount();
-            
-            User user = _userCollection.Find(x => x.Accounts.Contains(account))
-                                       .FirstOrDefault();
 
-            if (user == null)
-            {
-                //TODO: this should be bad request
-                return AuthorizationErrors.Unauthorized;
-            }
+            var tenant = _tenantCollection.FindSync(x => x.Accounts.Contains(account))
+                                          .FirstOrDefault();
 
-            var tentant = user.Tenants.FirstOrDefault(x => x.Name == request.Tenant);
-
-            if (tentant == null)
+            if (tenant == null)
             {
                 return TenantError.UnknownTenant;
             }
 
-            Response<KeyValuePair<string, Guid>, Error> key =  tentant.GenerateKey(request.Name);
+            var key = tenant.GenerateKey(request.Name);
 
-            _userCollection.ReplaceOne(x => x.Id == user.Id, user);
+            _tenantCollection.ReplaceOne(x => x.Id == tenant.Id, tenant);
 
             return key;
         }

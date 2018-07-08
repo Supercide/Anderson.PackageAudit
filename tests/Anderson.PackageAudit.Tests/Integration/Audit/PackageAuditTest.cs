@@ -23,12 +23,13 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         {
             _client = client;
         }
-        public StateUnderTestBuilder WithUser(bool optIntoMarketing, string tenantName)
+        public StateUnderTestBuilder WithUser(bool optIntoMarketing, string tenantName, string username)
         {
-            _userCreation = () => _client.PostAsJsonAsync("/api/users", new EnrolUserRequest
+            _userCreation = () => _client.PostAsJsonAsync("/api/users", value: new EnrolUserRequest
             {
                 TenantName = tenantName,
-                OptInToMarketing = optIntoMarketing
+                OptInToMarketing = optIntoMarketing,
+                Username = username
             });
 
             return this;
@@ -84,19 +85,24 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
         }
 
+
         [Test]
         public async Task GivenKnownKey_WhenAuditingPackages_ThenReturnsResultsForPackages()
         {
             StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
 
-            var context = await builder.WithUser(true, "anyTenant")
-                   .WithKey("anyKey","anyTenant")
-                   .Build();
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
+                .WithKey("anyKey", "anyTenant")
+                .Build();
 
             _client.DefaultRequestHeaders.Add("X-API-KEY", $"{context.Keys[0].Value}");
 
-            var response = await _client.PostAsJsonAsync("/api/packages", new [] { new PackageRequest { Name = "Fluent.Validation", Version = "1.0.1"}});
-            await response.Content.ReadAsAsync<Package[]>();
+            var response = await _client.PostAsJsonAsync("/api/packages", 
+                new AuditRequest
+                {
+                    Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
+                });
+            await response.Content.ReadAsAsync<AuditResponse>();
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
@@ -112,11 +118,15 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
 
             StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
 
-            var context = await builder.WithUser(true, "anyTenant")
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
                 .Build();
 
-            var response = await _client.PostAsJsonAsync("/api/packages", new[] { new PackageRequest { Name = "Fluent.Validation", Version = "1.0.1" } });
-            await response.Content.ReadAsAsync<Package[]>();
+            var response = await _client.PostAsJsonAsync("/api/packages",
+                new AuditRequest
+                {
+                    Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
+                });
+            await response.Content.ReadAsAsync<AuditResponse>();
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
         }

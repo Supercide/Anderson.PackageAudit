@@ -10,6 +10,6 @@ namespace Anderson.PackageAudit.Audit
 {
     public interface IPackagePipelines
     {
-        IRequestHandler<HttpRequest, Response<IList<Package>, Error>> AuditPackages { get; }
+        IRequestHandler<HttpRequest, Response<AuditResponse, Error>> AuditPackages { get; }
     }
 }

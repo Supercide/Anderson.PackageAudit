@@ -1,20 +1,26 @@
 ﻿using System.Collections.Generic;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.PackageModels;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 
 namespace Anderson.PackageAudit.Tests
 {
-    public class TestHandler : PipelineDefinition<IList<TestObject>, Response<IList<TestObject>, Error>>
+    public class TestHandler : PipelineDefinition<AuditRequest, Response<AuditResponse, Error>>
     {
-        public List<TestObject> Input = new List<TestObject>();
+        private readonly List<Package> _response;
 
-        public override Response<IList<TestObject>, Error> Handle(IList<TestObject> request)
+        public TestHandler(params Package[] response)
         {
-            Input.AddRange(request);
-
-            return Input;
+            _response = new List<Package>(response);
+        }
+        public override Response<AuditResponse, Error> Handle(AuditRequest request)
+        {
+            return new AuditResponse
+            {
+                Packages = _response 
+            };
         }
     }
 }

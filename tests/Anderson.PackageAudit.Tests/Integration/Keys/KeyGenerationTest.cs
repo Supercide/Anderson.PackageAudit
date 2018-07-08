@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Keys.Pipelines;
+using Anderson.PackageAudit.Tests.Integration.Audit;
 using Anderson.PackageAudit.Tests.Integration.Users;
 using Anderson.PackageAudit.Users;
 using NUnit.Framework;
@@ -40,19 +39,22 @@ namespace Anderson.PackageAudit.Tests.Integration.Keys
         [Test]
         public async Task GivenKnownUser_WhenGeneratingKeyForTenant_ThenGeneratesKeyForTenant()
         {
-            await EnrolUser("someName", false);
+            StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
+
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
+                .Build();
 
             var expected = "Some key";
-
+            
             var response = await _client.PostAsJsonAsync("/api/keys", new KeyRequest
             {
                 Name = expected,
                 Tenant = "someName"
             });
 
-            var key = await response.Content.ReadAsAsync<KeyValuePair<string, Guid>>();
+            var key = await response.Content.ReadAsAsync<KeyResponse>();
 
-            Assert.That(key.Key, Is.EqualTo(expected));
+            Assert.That(key.Name, Is.EqualTo(expected));
             Assert.That(key.Value, Is.Not.EqualTo(Guid.Empty));
         }
 
@@ -67,13 +69,16 @@ namespace Anderson.PackageAudit.Tests.Integration.Keys
                 Tenant = "someName"
             });
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [Test]
         public async Task GivenDuplicateKeyNameForTenant_WhenGereatingKey_ThenReturns400()
         {
-            await EnrolUser("someName", false);
+            StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
+
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
+                .Build();
 
             await GenerateKey("Some key", "someName");
 

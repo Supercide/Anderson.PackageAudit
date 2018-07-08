@@ -8,6 +8,7 @@ using Anderson.PackageAudit.SharedPipes.Authorization;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Caching;
 using Anderson.PackageAudit.SharedPipes.Mutations;
+using Anderson.PackageAudit.Users;
 using Anderson.PackageAudit.Users.Pipes;
 using Anderson.Pipelines.Builders;
 using Anderson.Pipelines.Responses;
@@ -31,8 +32,10 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             serviceCollection.AddSingleton(typeof(KeyAuthorizationPipe<>));
             serviceCollection.AddSingleton(typeof(AccountMutationPipe<,>));
             serviceCollection.AddSingleton(typeof(HttpRequestMutationPipe<,>));
-            serviceCollection.AddSingleton(typeof(CachingPipe<,>));
+            serviceCollection.AddSingleton(typeof(AuditRequestCachingPipe));
             serviceCollection.AddSingleton<OSSIndexPipe>();
+            serviceCollection.AddSingleton<AuditMutation>();
+            serviceCollection.AddSingleton<RetrieveTenantPipe>();
             serviceCollection.AddSingleton<RetrieveUserPipe>();
             serviceCollection.AddSingleton<EnrolUserPipe>();
         }

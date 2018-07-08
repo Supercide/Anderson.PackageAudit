@@ -10,6 +10,7 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
         {
             serviceCollection.AddSingleton<IPackagePipelines, PackagePipelines>();
             serviceCollection.AddScoped<IUserPipelines, UserPipelines>();
+            serviceCollection.AddScoped< ITenantPipelines, TenantPipelines > ();
         }
     }
 }

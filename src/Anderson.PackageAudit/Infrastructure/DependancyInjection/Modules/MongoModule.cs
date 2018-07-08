@@ -32,6 +32,13 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
                 var collection = mongodb.GetCollection<User>(nameof(User));
                 return collection;
             });
+
+            serviceCollection.AddSingleton(provider =>
+            {
+                var mongodb = provider.GetService<IMongoDatabase>();
+                var collection = mongodb.GetCollection<Tenant>(nameof(Tenant));
+                return collection;
+            });
         }
     }
 

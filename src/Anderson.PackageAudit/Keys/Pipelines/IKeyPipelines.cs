@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
-using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.Pipelines.Builders;
@@ -14,21 +12,21 @@ namespace Anderson.PackageAudit.Keys.Pipelines
 {
     public interface IKeyPipelines
     {
-        IRequestHandler<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> GenerateKey { get; }
+        IRequestHandler<HttpRequest, Response<Key, Error>> GenerateKey { get; }
     }
 
     public class KeyPiplines : IKeyPipelines
     {
-        private readonly PipelineDefinitionBuilder<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> _builder;
+        private readonly PipelineDefinitionBuilder<HttpRequest, Response<Key, Error>> _builder;
 
-        public KeyPiplines(PipelineDefinitionBuilder<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> builder)
+        public KeyPiplines(PipelineDefinitionBuilder<HttpRequest, Response<Key, Error>> builder)
         {
             _builder = builder;
         }
 
-        public IRequestHandler<HttpRequest, Response<KeyValuePair<string, Guid>, Error>> GenerateKey => 
-            _builder.StartWith<AuthorizationPipe<KeyValuePair<string, Guid>>>()
-                    .ThenWithMutation<HttpRequestMutationPipe<KeyRequest, Response<KeyValuePair<string, Guid>, Error>>, KeyRequest>()
+        public IRequestHandler<HttpRequest, Response<Key, Error>> GenerateKey => 
+            _builder.StartWith<AuthorizationPipe<Key>>()
+                    .ThenWithMutation<HttpRequestMutationPipe<KeyRequest, Response<Key, Error>>, KeyRequest>()
                     .ThenWith<KeyCreationPipe>()
                     .Build();
     }
@@ -38,5 +36,11 @@ namespace Anderson.PackageAudit.Keys.Pipelines
     {
         public string Tenant { get; set; }
         public string Name { get; set; }
+    }
+
+    public class KeyResponse
+    {
+        public string Name { get; set; }
+        public Guid Value { get; set; }
     }
 }

@@ -16,6 +16,47 @@ using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests.Integration.Users
 {
+    class TenantTests
+    {
+        private HttpClient _client;
+
+        [SetUp]
+        public void Setup()
+        {
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri($"http://localhost:{GlobalSetup.Port}")
+            };
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
+        }
+
+        [Test]
+        public async Task GivenKnownTenant_WhenRetrievingUserDetails_ThenReturnsTenantDetails()
+        {
+            StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
+            var username = $"{Guid.NewGuid()}";
+            var tenantName = "someName";
+            var context = await builder.WithUser(false, tenantName, username)
+                .WithKey("some key", tenantName)
+                .Build();
+
+            var response = await _client.GetAsync($"/api/tenants?name=someName");
+            var tenants = await response.Content.ReadAsAsync<Tenant>();
+            using (new AssertionScope())
+            {
+                tenants.Users[0].Username.Should().Be(username);
+                tenants.Name.Should().Be(tenantName);
+            }
+        }
+
+        [Test]
+        public async Task GivenUnEnrolledUser_WhenRetrievingUserDetails_ThenReturnsNotFound()
+        {
+            var response = await _client.GetAsync($"/api/tenants?name=someName");
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+    }
     class UserTests
     {
         private HttpClient _client;
@@ -35,7 +76,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Users
         public async Task GivenKnownUser_WhenRetrievingUserDetails_ThenReturnsUserDetails()
         {
             StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
-            var context = await builder.WithUser(false, "someName")
+            var context = await builder.WithUser(false, "someName", $"{Guid.NewGuid()}")
                                        .WithKey("some key", "someName")
                                        .Build();
 
@@ -45,8 +86,6 @@ namespace Anderson.PackageAudit.Tests.Integration.Users
             {
                 user.Tenants.Count.Should().Be(1);
                 user.Tenants[0].Name.Should().Be("someName");
-                user.Tenants[0].Keys.Count.Should().Be(1);
-                user.Tenants[0].Keys.Any(x => x.Name == "some key").Should().BeTrue();
             }
         }
 
@@ -72,30 +111,38 @@ namespace Anderson.PackageAudit.Tests.Integration.Users
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
         }
 
-        [TestCase("anyTenantName", true)]
-        [TestCase("anyTenantName", false)]
-        public async Task GivenUserNotEnrolled_WhenEnrollingUser_ThenEnrolsUser(string tenantName, bool optInToMarketing)
+        [TestCase("anyTenantName", true, "username1")]
+        [TestCase("anyTenantName", false, "username1")]
+        public async Task GivenUserNotEnrolled_WhenEnrollingUser_ThenEnrolsUser(string tenantName, bool optInToMarketing, string username)
         {
             var response = await _client.PostAsJsonAsync("/api/users", new EnrolUserRequest
             {
                 TenantName = tenantName,
-                OptInToMarketing = optInToMarketing
+                OptInToMarketing = optInToMarketing,
+                Username = username
             });
 
             var user = await response.Content.ReadAsAsync<User>();
             Assert.That(user.Tenants[0].Name, Is.EqualTo(tenantName)); 
+            Assert.That(user.Tenants[0].Id, Is.Not.EqualTo(Guid.Empty)); 
+            Assert.That(user.Username, Is.EqualTo(username)); 
         }
 
         [Test]
         public async Task GivenUserEnrolled_WhenEnrollingUser_ThenReturnsBadRequest()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
+            StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
 
-            await EnrolUser("some tenant", true);
+            var username = $"{Guid.NewGuid()}";
+
+            var context = await builder.WithUser(true, "anyTenant", username)
+                .Build();
+
             var response = await _client.PostAsJsonAsync("/api/users", new EnrolUserRequest
             {
                 TenantName = "another tenant",
-                OptInToMarketing = true
+                OptInToMarketing = true,
+                Username = username
             });
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
