@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Caching;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -23,48 +24,20 @@ namespace Anderson.PackageAudit.Tests.Handlers
         [Test]
         public void GivenCachingPipe_WhenCallingHandle_ThenResponseIsCached()
         {
-            var requestHandler = new TestHandler();
-            var pipe = new CachingPipe<TestObject, TestObject>(_redisClient)
+            var expected = new Package { name = "any",version = "001"} ;
+            var requestHandler = new TestHandler(new[] { expected});
+            var pipe = new AuditRequestCachingPipe(_redisClient)
             {
                 InnerHandler = requestHandler
             };
-
-            var expected = new[] {new TestObject {Id = "someid"}};
-            pipe.Handle(new List<TestObject>(expected));
-            requestHandler.Input.Should().BeEquivalentTo(expected);
-        }
-
-        [Test]
-        public void GivenCachingPipe_WhenCallingHandleWithCeachedResponse_ThenRequestHasCachedResponsesFiltered()
-        {
-            var requestHandler = new TestHandler();
-            var pipe = new CachingPipe<TestObject, TestObject>(_redisClient)
+            
+            pipe.Handle(new AuditRequest
             {
-                InnerHandler = requestHandler
-            };
-
-            _redisClient.Store(new TestObject {Id = "cachedId"});
-
-            var expected = new[] { new TestObject { Id = "someid" } };
-            var testObjects = new List<TestObject>(expected)
-            {
-                new TestObject { Id = "cachedId" }
-            };
-
-            pipe.Handle(testObjects);
-            requestHandler.Input.Should().BeEquivalentTo(expected);
-        }
-
-        private static DefaultHttpRequest CreateDefaultHttpRequest()
-        {
-            var httpRequest = new DefaultHttpRequest(new DefaultHttpContext());
-            var memoryStream = new MemoryStream();
-
-            var request = "[{name: \"FluentValidation\", version: \"1.0.1\"}]";
-            memoryStream.Write(Encoding.UTF8.GetBytes(request), 0, request.Length);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            httpRequest.Body = memoryStream;
-            return httpRequest;
+                Packages = new List<ProjectPackages>(new []{new ProjectPackages{Name = "any", Version = "001"}})
+            });
+            var client = _redisClient.As<Package>();
+            var actual = client.GetById("ANY001");
+            actual.Should().BeEquivalentTo(expected);
         }
     }
 }

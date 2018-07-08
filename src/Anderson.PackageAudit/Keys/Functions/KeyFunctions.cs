@@ -1,4 +1,5 @@
-﻿using Anderson.PackageAudit.Core.Errors;
+﻿using System;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Errors.Extensions;
@@ -25,7 +26,7 @@ namespace Anderson.PackageAudit.Keys.Functions
             var response = pipeline.Handle(req);
             if (response.IsSuccess)
             {
-                return new OkObjectResult(response.Success);
+                return new OkObjectResult(new KeyResponse  { Name = response.Success.Key, Value = response.Success.Value } );
             }
 
             return response.Error.ToActionResult(errorResolver.Resolve);

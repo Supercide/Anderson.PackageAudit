@@ -31,7 +31,7 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             serviceCollection.AddSingleton(typeof(KeyAuthorizationPipe<>));
             serviceCollection.AddSingleton(typeof(AccountMutationPipe<,>));
             serviceCollection.AddSingleton(typeof(HttpRequestMutationPipe<,>));
-            serviceCollection.AddSingleton(typeof(CachingPipe<,>));
+            serviceCollection.AddSingleton(typeof(AuditRequestCachingPipe));
             serviceCollection.AddSingleton<OSSIndexPipe>();
             serviceCollection.AddSingleton<RetrieveUserPipe>();
             serviceCollection.AddSingleton<EnrolUserPipe>();

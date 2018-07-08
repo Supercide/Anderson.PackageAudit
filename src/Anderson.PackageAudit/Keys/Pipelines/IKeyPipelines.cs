@@ -39,4 +39,10 @@ namespace Anderson.PackageAudit.Keys.Pipelines
         public string Tenant { get; set; }
         public string Name { get; set; }
     }
+
+    public class KeyResponse
+    {
+        public string Name { get; set; }
+        public Guid Value { get; set; }
+    }
 }

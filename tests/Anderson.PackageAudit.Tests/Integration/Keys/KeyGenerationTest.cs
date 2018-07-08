@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Keys.Pipelines;
 using Anderson.PackageAudit.Tests.Integration.Users;
 using Anderson.PackageAudit.Users;
@@ -50,9 +48,9 @@ namespace Anderson.PackageAudit.Tests.Integration.Keys
                 Tenant = "someName"
             });
 
-            var key = await response.Content.ReadAsAsync<KeyValuePair<string, Guid>>();
+            var key = await response.Content.ReadAsAsync<KeyResponse>();
 
-            Assert.That(key.Key, Is.EqualTo(expected));
+            Assert.That(key.Name, Is.EqualTo(expected));
             Assert.That(key.Value, Is.Not.EqualTo(Guid.Empty));
         }
 

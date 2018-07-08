@@ -16,25 +16,16 @@ namespace Anderson.PackageAudit.Audit
 {
     public class PackagePipelines : IPackagePipelines
     {
-        private readonly PipelineDefinitionBuilder<HttpRequest, Response<IList<Package>, Error>> _builder;
-
-        private readonly Lazy<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>> _auditPipeline;
-
-        public IRequestHandler<HttpRequest, Response<IList<Package>, Error>> AuditPackages => _auditPipeline.Value; 
-
-        public PackagePipelines(PipelineDefinitionBuilder<HttpRequest, Response<IList<Package>, Error>> builder)
+        public PackagePipelines(PipelineDefinitionBuilder<HttpRequest, Response<AuditResponse, Error>> builder)
         {
-            _builder = builder;
-            _auditPipeline = new Lazy<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>>(CreateAuditPackagePipeline);
-        }
-
-        private Func<IRequestHandler<HttpRequest, Response<IList<Package>, Error>>> CreateAuditPackagePipeline => 
-
-            () => _builder.StartWith<AuthorizationPipe<IList<Package>>>()
-                .ThenWith<KeyAuthorizationPipe<IList<Package>>>()
-                .ThenWithMutation<HttpRequestMutationPipe<IList<PackageRequest>, Response<IList<Package>, Error>>, IList<PackageRequest>>()
-                .ThenWith<CachingPipe<PackageRequest, Package>>()
+            AuditPackages = builder.StartWith<AuthorizationPipe<AuditResponse>>()
+                .ThenWith<KeyAuthorizationPipe<AuditResponse>>()
+                .ThenWithMutation<HttpRequestMutationPipe<AuditRequest, Response<AuditResponse, Error>>, AuditRequest>()
+                .ThenWith<AuditRequestCachingPipe>()
                 .ThenWith<OSSIndexPipe>()
                 .Build();
+        }
+
+        public IRequestHandler<HttpRequest, Response<AuditResponse, Error>> AuditPackages { get; }
     }
 }
