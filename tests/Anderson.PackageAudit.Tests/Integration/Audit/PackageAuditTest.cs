@@ -23,12 +23,13 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         {
             _client = client;
         }
-        public StateUnderTestBuilder WithUser(bool optIntoMarketing, string tenantName)
+        public StateUnderTestBuilder WithUser(bool optIntoMarketing, string tenantName, string username)
         {
-            _userCreation = () => _client.PostAsJsonAsync("/api/users", new EnrolUserRequest
+            _userCreation = () => _client.PostAsJsonAsync("/api/users", value: new EnrolUserRequest
             {
                 TenantName = tenantName,
-                OptInToMarketing = optIntoMarketing
+                OptInToMarketing = optIntoMarketing,
+                Username = username
             });
 
             return this;
@@ -90,7 +91,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         {
             StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
 
-            var context = await builder.WithUser(true, "anyTenant")
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
                 .WithKey("anyKey", "anyTenant")
                 .Build();
 
@@ -117,7 +118,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
 
             StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
 
-            var context = await builder.WithUser(true, "anyTenant")
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
                 .Build();
 
             var response = await _client.PostAsJsonAsync("/api/packages",

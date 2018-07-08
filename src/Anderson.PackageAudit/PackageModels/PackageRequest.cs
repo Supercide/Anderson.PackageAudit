@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Anderson.PackageAudit.SharedPipes.Caching;
 
 namespace Anderson.PackageAudit.PackageModels
@@ -13,6 +14,7 @@ namespace Anderson.PackageAudit.PackageModels
         public string Version { get; set; }
         public string Project { get; set; }
         public IList<ProjectPackages> Packages  { get; set; }
+        public Guid ApiKey { get; set; }
     }
 
     public class ProjectPackages : ICachableEntity

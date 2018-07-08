@@ -11,5 +11,6 @@ namespace Anderson.PackageAudit.Users
     {
         IRequestHandler<HttpRequest, Response<User, Error>> RetrieveCurrentUser { get; }
         IRequestHandler<HttpRequest, Response<User, Error>> EnrolUser { get; }
+        IRequestHandler<HttpRequest, Response<Tenant, Error>> GetTenant { get; }
     }
 }

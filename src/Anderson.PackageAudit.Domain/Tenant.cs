@@ -8,13 +8,8 @@ namespace Anderson.PackageAudit.Domain
 {
     public class Key : IEquatable<Key>
     {
-        public Key(string name, Guid value)
-        {
-            Name = name;
-            Value = value;
-        }
-        public string Name { get; protected set; }
-        public Guid Value { get; protected set; }
+        public string Name { get; set; }
+        public Guid Value { get; set; }
 
         public bool Equals(Key other)
         {
@@ -35,37 +30,103 @@ namespace Anderson.PackageAudit.Domain
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ Value.GetHashCode();
+                return ((Value != null ? Value.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
             }
         }
     }
 
     public class Tenant
     {
-        public Tenant(string name)
-        {
-            Name = name;
-            Keys = new HashSet<Key>();
-        }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
-        public ISet<Key> Keys{ get; set; }
 
-        public Response<KeyValuePair<string, Guid>, Error> GenerateKey(string name)
+        public List<UserSummary> Users { get; set; }
+        public List<Project> Projects { get; set; }
+
+        public List<Key> Keys { get; set; }
+        public List<Account> Accounts { get; set; }
+
+
+        public Response<Key, Error> GenerateKey(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 return KeyError.InvalidKeyName;
             }
 
-            if (Keys.Any(x => x.Name == name))
+            if (Keys != null && Keys.Any(x => x.Name == name))
             {
                 return TenantError.TenantAlreadyContainsKey;
             }
             var value = Guid.NewGuid();
-            Keys.Add(new Key(name, value));
-            return new KeyValuePair<string, Guid>(name, value);
+            var key = new Key { Name = name, Value = value };
+
+            Keys = Keys ?? new List<Key>();
+            Keys.Add(key);
+            return key;
         }
+
+        public void RecordProjectResult(Project project)
+        {
+            Projects.Add(project);
+        }
+    }
+
+    public class Project
+    {
+        public string Name { get; set;  }
+        public string Version { get; set;  }
+        public IEnumerable<Package> Packages { get; set;  }
+
+        public Project(string name, string version, IEnumerable<Package> packages)
+        {
+            Name = name;
+            Version = version;
+            Packages = packages;
+        }
+    }
+
+    public class Package
+    {
+        public string PackageManager { get; set; }
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public VulnerabilitySummary Summary { get; set; }
+        public IList<Vulnerability> Vulnerabilities { get; set; }
+    }
+
+    public class Vulnerability
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string[] Versions { get; set; }
+        public string[] References { get; set; }
+    }
+    public class VulnerabilitySummary
+    {
+        public int High { get; set; }
+        public int Medium { get; set; }
+        public int Low { get; set; }
+
+    }
+
+    public class UserSummary
+    {
+        public string Username { get; set; }
+        public List<Account> Accounts { get; set; }
+    }
+
+    public class TenantSummary
+    {
+        public TenantSummary(string name, Guid id)
+        {
+            Name = name;
+            Id = id;
+        }
+
+        public string Name { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class KeyError : Error

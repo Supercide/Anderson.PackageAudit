@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Core.Errors;
@@ -11,8 +12,8 @@ using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
 using Anderson.Pipelines.Responses;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Package = Anderson.PackageAudit.PackageModels.Package;
 
 namespace Anderson.PackageAudit.Audit.Pipes
 {

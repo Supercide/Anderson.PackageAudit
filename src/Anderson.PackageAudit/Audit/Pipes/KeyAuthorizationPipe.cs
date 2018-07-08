@@ -11,11 +11,11 @@ namespace Anderson.PackageAudit.Audit.Pipes
 {
     public class KeyAuthorizationPipe<TSuccess> : Pipelines.Definitions.PipelineDefinition<HttpRequest, Response<TSuccess, Error>>
     {
-        private readonly IMongoCollection<User> _userCollection;
+        private readonly IMongoCollection<Tenant> _tenantCollection;
 
-        public KeyAuthorizationPipe(IMongoCollection<User> userCollection)
+        public KeyAuthorizationPipe(IMongoCollection<Tenant> tenantCollection)
         {
-            _userCollection = userCollection;
+            _tenantCollection = tenantCollection;
         }
 
         public override Response<TSuccess, Error> Handle(HttpRequest request)
@@ -40,12 +40,11 @@ namespace Anderson.PackageAudit.Audit.Pipes
             
         }
 
-        private bool DoesKeyExist(Guid key)
+        private bool DoesKeyExist(Guid keyValue)
         {
-            FilterDefinitionBuilder<User> filterBuilder = new FilterDefinitionBuilder<User>();
-            var filter = filterBuilder.ElemMatch(x => x.Tenants, tenant => tenant.Keys.Any(k => k.Value == key));
-            var cursor = _userCollection.FindSync(filter).Any();
-            return cursor;
+            FilterDefinitionBuilder<Tenant> filterBuilder = new FilterDefinitionBuilder<Tenant>();
+            var filter = filterBuilder.ElemMatch(x => x.Keys, key => key.Value == keyValue);
+            return _tenantCollection.FindSync(filter).Any();
         }
     }
 }
