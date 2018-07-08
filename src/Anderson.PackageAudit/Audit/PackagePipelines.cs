@@ -21,6 +21,7 @@ namespace Anderson.PackageAudit.Audit
             AuditPackages = builder.StartWith<AuthorizationPipe<AuditResponse>>()
                 .ThenWith<KeyAuthorizationPipe<AuditResponse>>()
                 .ThenWithMutation<AuditMutation, AuditRequest>()
+                .ThenWith<RecordResultPipe>()
                 .ThenWith<AuditRequestCachingPipe>()
                 .ThenWith<OSSIndexPipe>()
                 .Build();

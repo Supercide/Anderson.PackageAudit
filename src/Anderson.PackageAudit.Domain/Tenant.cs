@@ -69,6 +69,7 @@ namespace Anderson.PackageAudit.Domain
 
         public void RecordProjectResult(Project project)
         {
+            Projects = Projects ?? new List<Project>();
             Projects.Add(project);
         }
     }
