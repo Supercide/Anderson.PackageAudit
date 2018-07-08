@@ -21,7 +21,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Keys
         {
             _client = new HttpClient
             {
-                BaseAddress = new Uri($"http://localhost.fiddler:{GlobalSetup.Port}")
+                BaseAddress = new Uri($"http://localhost:{GlobalSetup.Port}")
             };
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
