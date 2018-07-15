@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -6,6 +8,7 @@ using System.Threading.Tasks;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.Tests.Integration.Users;
+using Anderson.PackageAudit.Users;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -28,7 +31,6 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
         }
 
-
         [Test]
         public async Task GivenKnownKey_WhenAuditingPackages_ThenReturnsResultsForPackages()
         {
@@ -41,7 +43,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             _client.DefaultRequestHeaders.Add("X-API-KEY", $"{context.Keys[0].Value}");
 
             var response = await _client.PostAsJsonAsync("/api/packages", 
-                new AuditRequest
+                new PackageAuditRequest
                 {
                     Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
                 });
@@ -65,13 +67,13 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
                 {
                     Project = "anyProject",
                     Version = "anyVersion",
-                    Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
+                    Packages = new[] { new ProjectPackages { Name = "FluentValidation", Version = "1.0.1" } }
                 });
 
             var tenantJson = await _client.GetStringAsync($"/api/tenants?name=anyTenant");
-            var tenant = JsonConvert.DeserializeObject<Tenant>(tenantJson);
-            tenant.Projects[0].Name.Should().Be("anyProject");
-            tenant.Projects[0].Version.Should().Be("anyVersion");
+            var tenant = JsonConvert.DeserializeObject<TenantOverview>(tenantJson);
+            tenant.Projects.First().Name.Should().Be("anyProject");
+            tenant.Projects.First().Version.Should().Be("anyVersion");
         }
 
         public class PackageRequest
@@ -92,7 +94,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             var response = await _client.PostAsJsonAsync("/api/packages",
                 new AuditRequest
                 {
-                    Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
+                    Packages = new[] { new ProjectPackages { Name = "FluentValidation", Version = "1.0.1" } }
                 });
             await response.Content.ReadAsAsync<AuditResponse>();
 
@@ -104,5 +106,12 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         {
             Assert.Inconclusive();
         }
+    }
+
+    public class PackageAuditRequest
+    {
+        public string Version { get; set; }
+        public string Project { get; set; }
+        public IList<ProjectPackages> Packages { get; set; }
     }
 }

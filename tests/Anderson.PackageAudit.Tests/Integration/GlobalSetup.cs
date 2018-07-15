@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Helpers;
 using NUnit.Framework;
 
-namespace Anderson.PackageAudit.Tests
+namespace Anderson.PackageAudit.Tests.Integration
 {
     public class DirectoryHelper
     {

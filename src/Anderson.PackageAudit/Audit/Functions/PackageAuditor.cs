@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors.Extensions;

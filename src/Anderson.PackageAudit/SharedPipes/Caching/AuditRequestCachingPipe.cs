@@ -11,19 +11,20 @@ namespace Anderson.PackageAudit.SharedPipes.Caching
 {
     public class AuditRequestCachingPipe : PipelineDefinition<AuditRequest, Response<AuditResponse, Error>> 
     {
-        private readonly IRedisTypedClient<Package> _redisClient;
+        private readonly IRedisTypedClient<PackageSummary> _redisClient;
 
         public AuditRequestCachingPipe(IRedisClient redisClient)
         {
-            _redisClient = redisClient.As<Package>();
+            _redisClient = redisClient.As<PackageSummary>();
         }
 
         public override Response<AuditResponse, Error> Handle(AuditRequest request)
         {
-            IList<Package> cachedPackages = _redisClient.GetByIds(request.Packages.Select(x => x.Id));
+            IList<PackageSummary> cachedPackages = _redisClient.GetByIds(request.Packages.Select(x => $"{x.Name}{x.Version}".ToUpper()));
 
             request.Packages = request.Packages
-                                      .Where(x => cachedPackages.All(package => package.Id != x.Id))
+                                      .Where(x => cachedPackages.All(package => x.Name != package.Name && 
+                                                                                x.Version != package.Version))
                                       .ToList();
 
             var response = InnerHandler.Handle(request);
@@ -38,10 +39,10 @@ namespace Anderson.PackageAudit.SharedPipes.Caching
             return response;
         }
 
-        private void CacheResponse(IList<Package> response)
+        private void CacheResponse(PackageSummary[] packages)
         {
-            if(response.Any())
-                _redisClient.StoreAll(response);
+            if(packages.Any())
+                _redisClient.StoreAll(packages);
         }
     }
 }

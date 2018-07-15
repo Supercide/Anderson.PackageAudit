@@ -9,11 +9,11 @@ namespace Anderson.PackageAudit.Tests
 {
     public class TestHandler : PipelineDefinition<AuditRequest, Response<AuditResponse, Error>>
     {
-        private readonly List<Package> _response;
+        private readonly PackageSummary[] _response;
 
-        public TestHandler(params Package[] response)
+        public TestHandler(params PackageSummary[] packageSummaries)
         {
-            _response = new List<Package>(response);
+            _response = packageSummaries;
         }
         public override Response<AuditResponse, Error> Handle(AuditRequest request)
         {

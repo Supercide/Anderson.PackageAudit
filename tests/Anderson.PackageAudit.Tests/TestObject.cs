@@ -2,7 +2,7 @@
 
 namespace Anderson.PackageAudit.Tests
 {
-    public class TestObject : ICachableEntity
+    public class TestObject 
     {
         public string Id { get; set; }
     }
