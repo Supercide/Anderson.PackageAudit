@@ -24,8 +24,7 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
 
         public override Response<TSuccess, Error> Handle(HttpRequest request)
         {
-            try
-            {
+            
                 var result = ExtractToken(request);
                 if (result.IsSuccess)
                 {
@@ -34,11 +33,7 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
                 }
 
                 return result.Error;
-            }
-            catch (SecurityTokenValidationException e)
-            {
-                return Errors.AuthorizationErrors.Unauthorized;
-            }
+            
         }
 
         private static Response<string, Error> ExtractToken(HttpRequest request)

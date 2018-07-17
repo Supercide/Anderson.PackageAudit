@@ -20,8 +20,7 @@ namespace Anderson.PackageAudit.Audit.Pipes
 
         public override Response<TSuccess, Error> Handle(HttpRequest request)
         {
-            try
-            {
+           
                 
                 if (request.Headers.ContainsKey("X-API-KEY") &&
                     Guid.TryParse(request.Headers["X-API-KEY"].FirstOrDefault(), out var key) &&
@@ -31,12 +30,7 @@ namespace Anderson.PackageAudit.Audit.Pipes
                 }
 
                 return SharedPipes.Authorization.Errors.AuthorizationErrors.Unauthorized;
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                throw;
-            }
+           
             
         }
 
