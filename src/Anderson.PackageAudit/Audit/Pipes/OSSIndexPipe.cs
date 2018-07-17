@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Audit.Errors;
 using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
@@ -37,7 +38,7 @@ namespace Anderson.PackageAudit.Audit.Pipes
             if(!request.Packages.Any())
                 return new Response<AuditResponse, Error>(new AuditResponse
                 {
-                    Packages = new List<Package>()
+                    Packages = new PackageSummary[0]
                 });
 
             var requestUri = new Uri(_configuration["ossindex:uri"]);
@@ -49,12 +50,31 @@ namespace Anderson.PackageAudit.Audit.Pipes
                     var json = await response.Content.ReadAsStringAsync();
                     return new AuditResponse
                     {
-                        Packages = JsonConvert.DeserializeObject<IList<Package>>(json)
+                        Packages = Map(json)
                     };
                 }
 
                 return AuditError.OssIndexUnavailable;
             }
+        }
+
+        public PackageSummary[] Map(string json)
+        {
+            return JsonConvert.DeserializeObject<Package[]>(json)
+                .Select(x => new PackageSummary
+                {
+                    Name = x.name,
+                    Version = x.version,
+                    PackageManager = "nuget",
+                    Vulnerabilities = x.vulnerabilities?.Select(vulnerability => new VulnerabilitySummary
+                    {
+                        Versions = vulnerability.versions,
+                        Description = vulnerability.description,
+                        Classification = Classification.Unknown,
+                        Title = vulnerability.title,
+                        References = vulnerability.references
+                    }).ToArray()
+                }).ToArray();
         }
     }
 }

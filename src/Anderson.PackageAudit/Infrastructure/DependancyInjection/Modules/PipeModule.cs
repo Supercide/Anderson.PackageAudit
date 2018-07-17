@@ -36,6 +36,7 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
             serviceCollection.AddSingleton<OSSIndexPipe>();
             serviceCollection.AddSingleton<AuditMutation>();
             serviceCollection.AddSingleton<RetrieveTenantPipe>();
+            serviceCollection.AddSingleton<RecordResultPipe>();
             serviceCollection.AddSingleton<RetrieveUserPipe>();
             serviceCollection.AddSingleton<EnrolUserPipe>();
         }

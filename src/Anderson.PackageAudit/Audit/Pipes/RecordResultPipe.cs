@@ -9,6 +9,7 @@ using Vulnerability = Anderson.PackageAudit.Domain.Vulnerability;
 
 namespace Anderson.PackageAudit.Audit.Pipes
 {
+
     public class RecordResultPipe : Pipelines.Definitions.PipelineDefinition<AuditRequest, Response<AuditResponse, Error>>
     {
         private readonly IMongoCollection<Tenant> _tenantCollection;
@@ -20,24 +21,35 @@ namespace Anderson.PackageAudit.Audit.Pipes
 
         public override Response<AuditResponse, Error> Handle(AuditRequest request)
         {
-            var response = this.InnerHandler.Handle(request);
+            var response = InnerHandler.Handle(request);
 
             if (response.IsSuccess)
             {
-                var tenant = _tenantCollection.FindSync(x => x.Keys.Contains(new Key { Value = request.ApiKey } )).FirstOrDefault();
-                tenant.RecordProjectResult(new Project(request.Project, request.Version, response.Success.Packages.Select(package => new Domain.Package
+                FilterDefinitionBuilder<Tenant> filterBuilder = new FilterDefinitionBuilder<Tenant>();
+                var filter = filterBuilder.ElemMatch(x => x.Keys, key => key.Value == request.ApiKey);
+                var tenant = _tenantCollection.FindSync(filter).First();
+
+                tenant.RecordProjectResult(new Project
                 {
-                    Name = package.name,
-                    Version = package.version,
-                    PackageManager = "nuget",
-                    Summary = new VulnerabilitySummary
+                    Name = request.Project,
+                    Version = request.Version,
+                    Packages = response.Success.Packages.Select(package => new Domain.Package
                     {
-                        High = 15,
-                        Low = 10,
-                        Medium = 3
-                    },
-                    Vulnerabilities = new List<Vulnerability>()
-                })));
+                        Name = package.Name,
+                        Version = package.Version,
+                        PackageManager = "nuget",
+                        Vulnerabilities = package.Vulnerabilities?.Select(vulnerability => new Vulnerability
+                        {
+                            Classification = Classification.Unknown,
+                            Description = vulnerability.Description,
+                            Title = vulnerability.Title,
+                            References = vulnerability.References,
+                            AffectedVersions = vulnerability.Versions
+                        }).ToArray() ?? new Vulnerability[0]
+                    })
+                });
+
+                _tenantCollection.ReplaceOne(x => x.Id == tenant.Id, tenant);
             }
 
             return response;

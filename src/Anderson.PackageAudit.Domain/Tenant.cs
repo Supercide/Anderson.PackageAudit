@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.Pipelines.Responses;
+using JetBrains.Annotations;
 
 namespace Anderson.PackageAudit.Domain
 {
@@ -37,13 +38,18 @@ namespace Anderson.PackageAudit.Domain
 
     public class Tenant
     {
+        public Tenant()
+        {
+            Users = new List<UserSummary>();
+            Projects = new List<Project>();
+            Accounts = new List<Account>();
+        }
         public Guid Id { get; set; }
 
         public string Name { get; set; }
 
         public List<UserSummary> Users { get; set; }
         public List<Project> Projects { get; set; }
-
         public List<Key> Keys { get; set; }
         public List<Account> Accounts { get; set; }
 
@@ -69,45 +75,59 @@ namespace Anderson.PackageAudit.Domain
 
         public void RecordProjectResult(Project project)
         {
+            Projects = Projects ?? new List<Project>();
             Projects.Add(project);
         }
     }
 
     public class Project
     {
+        public Project()
+        {
+            Packages = new Package[0];
+        }
+
         public string Name { get; set;  }
         public string Version { get; set;  }
+        
         public IEnumerable<Package> Packages { get; set;  }
-
-        public Project(string name, string version, IEnumerable<Package> packages)
-        {
-            Name = name;
-            Version = version;
-            Packages = packages;
-        }
     }
 
-    public class Package
+    public class Package 
     {
-        public string PackageManager { get; set; }
+        public Package()
+        {
+            Vulnerabilities = new Vulnerability[0];
+        }
         public string Name { get; set; }
         public string Version { get; set; }
-        public VulnerabilitySummary Summary { get; set; }
-        public IList<Vulnerability> Vulnerabilities { get; set; }
+        public Vulnerability[] Vulnerabilities { get; set; }
+        public string PackageManager { get; set; }
+    }
+
+    public enum Classification
+    {
+        Unknown,
+        Low,
+        Medium,
+        High
     }
 
     public class Vulnerability
     {
+        public Classification Classification { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string[] Versions { get; set; }
+        public string[] AffectedVersions { get; set; }
         public string[] References { get; set; }
     }
     public class VulnerabilitySummary
     {
-        public int High { get; set; }
-        public int Medium { get; set; }
-        public int Low { get; set; }
+        public string[] Versions { get; set; }
+        public Classification Classification { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string[] References { get; set; }
 
     }
 

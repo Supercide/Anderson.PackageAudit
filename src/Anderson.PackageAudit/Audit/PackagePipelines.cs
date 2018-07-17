@@ -18,9 +18,9 @@ namespace Anderson.PackageAudit.Audit
     {
         public PackagePipelines(PipelineDefinitionBuilder<HttpRequest, Response<AuditResponse, Error>> builder)
         {
-            AuditPackages = builder.StartWith<AuthorizationPipe<AuditResponse>>()
-                .ThenWith<KeyAuthorizationPipe<AuditResponse>>()
+            AuditPackages = builder.StartWith<KeyAuthorizationPipe<AuditResponse>>()
                 .ThenWithMutation<AuditMutation, AuditRequest>()
+                .ThenWith<RecordResultPipe>()
                 .ThenWith<AuditRequestCachingPipe>()
                 .ThenWith<OSSIndexPipe>()
                 .Build();

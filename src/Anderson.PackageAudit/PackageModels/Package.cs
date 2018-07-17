@@ -3,10 +3,9 @@ using Newtonsoft.Json;
 
 namespace Anderson.PackageAudit.PackageModels
 {
-    public class Package : ICachableEntity
+    public class Package
     {
-        [JsonIgnore]
-        public string Id => $"{name}{version}".ToUpper();
+
         public string pm { get; set; }
         public string name { get; set; }
         public string version { get; set; }

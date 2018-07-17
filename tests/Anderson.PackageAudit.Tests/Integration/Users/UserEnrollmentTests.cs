@@ -42,10 +42,10 @@ namespace Anderson.PackageAudit.Tests.Integration.Users
                 .Build();
 
             var response = await _client.GetAsync($"/api/tenants?name=someName");
-            var tenants = await response.Content.ReadAsAsync<Tenant>();
+            var tenants = await response.Content.ReadAsAsync<TenantOverview>();
             using (new AssertionScope())
             {
-                tenants.Users[0].Username.Should().Be(username);
+                tenants.Projects.Should().BeEmpty();
                 tenants.Name.Should().Be(tenantName);
             }
         }

@@ -5,70 +5,16 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Anderson.PackageAudit.Keys.Pipelines;
+using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.PackageModels;
 using Anderson.PackageAudit.Tests.Integration.Users;
 using Anderson.PackageAudit.Users;
+using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests.Integration.Audit
 {
-    public class StateUnderTestBuilder
-    {
-        private readonly HttpClient _client;
-        private Func<Task> _userCreation;
-        private readonly List<Func<Task<KeyValuePair<string, Guid>>>> _keyCreation = new List<Func<Task<KeyValuePair<string, Guid>>>>();
-
-        public StateUnderTestBuilder(HttpClient client)
-        {
-            _client = client;
-        }
-        public StateUnderTestBuilder WithUser(bool optIntoMarketing, string tenantName, string username)
-        {
-            _userCreation = () => _client.PostAsJsonAsync("/api/users", value: new EnrolUserRequest
-            {
-                TenantName = tenantName,
-                OptInToMarketing = optIntoMarketing,
-                Username = username
-            });
-
-            return this;
-        }
-
-        public StateUnderTestBuilder WithKey(string name, string tenantName)
-        {
-            _keyCreation.Add(async () =>
-            {
-                var response = await _client.PostAsJsonAsync("/api/keys", new KeyRequest
-                {
-                    Name = name,
-                    Tenant = tenantName
-                });
-
-                return await response.Content.ReadAsAsync<KeyValuePair<string, Guid>>();
-            });
-
-            return this;
-        }
-
-        public async Task<StateUnderTestContext> Build()
-        {
-            _userCreation?.Invoke().GetAwaiter().GetResult();
-            var keys = await Task.WhenAll(_keyCreation.Select(createKey => createKey()));
-            return new StateUnderTestContext
-            {
-                UserEnrolled = _userCreation != null,
-                Keys = keys
-            };
-        }
-    }
-
-    public class StateUnderTestContext
-    {
-        public bool UserEnrolled { get; set; }
-        public KeyValuePair<string, Guid>[] Keys { get; set; }
-    }
-
     public class PackageAuditTest
     {
         private HttpClient _client;
@@ -85,7 +31,6 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenHelper.Token(Guid.NewGuid().ToString()));
         }
 
-
         [Test]
         public async Task GivenKnownKey_WhenAuditingPackages_ThenReturnsResultsForPackages()
         {
@@ -98,12 +43,37 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             _client.DefaultRequestHeaders.Add("X-API-KEY", $"{context.Keys[0].Value}");
 
             var response = await _client.PostAsJsonAsync("/api/packages", 
-                new AuditRequest
+                new PackageAuditRequest
                 {
                     Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
                 });
             await response.Content.ReadAsAsync<AuditResponse>();
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task GivenKnownKey_WhenAuditingPackages_ThenAddsProjectToTenant()
+        {
+            StateUnderTestBuilder builder = new StateUnderTestBuilder(_client);
+
+            var context = await builder.WithUser(true, "anyTenant", $"{Guid.NewGuid()}")
+                .WithKey("anyKey", "anyTenant")
+                .Build();
+
+            _client.DefaultRequestHeaders.Add("X-API-KEY", $"{context.Keys[0].Value}");
+
+            await _client.PostAsJsonAsync("/api/packages",
+                new AuditRequest
+                {
+                    Project = "anyProject",
+                    Version = "anyVersion",
+                    Packages = new[] { new ProjectPackages { Name = "FluentValidation", Version = "1.0.1" } }
+                });
+
+            var tenantJson = await _client.GetStringAsync($"/api/tenants?name=anyTenant");
+            var tenant = JsonConvert.DeserializeObject<TenantOverview>(tenantJson);
+            tenant.Projects.First().Name.Should().Be("anyProject");
+            tenant.Projects.First().Version.Should().Be("anyVersion");
         }
 
         public class PackageRequest
@@ -124,7 +94,7 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
             var response = await _client.PostAsJsonAsync("/api/packages",
                 new AuditRequest
                 {
-                    Packages = new[] { new ProjectPackages { Name = "Fluent.Validation", Version = "1.0.1" } }
+                    Packages = new[] { new ProjectPackages { Name = "FluentValidation", Version = "1.0.1" } }
                 });
             await response.Content.ReadAsAsync<AuditResponse>();
 
@@ -136,5 +106,12 @@ namespace Anderson.PackageAudit.Tests.Integration.Audit
         {
             Assert.Inconclusive();
         }
+    }
+
+    public class PackageAuditRequest
+    {
+        public string Version { get; set; }
+        public string Project { get; set; }
+        public IList<ProjectPackages> Packages { get; set; }
     }
 }
