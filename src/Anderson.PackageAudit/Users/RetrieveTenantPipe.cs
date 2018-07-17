@@ -34,16 +34,28 @@ namespace Anderson.PackageAudit.Users
                 return TenantError.UnknownTenant;
             }
             List<ProjectOverview> projectOverview = new List<ProjectOverview>();
-            var projectVulnerabilitySummary = new Dictionary<Classification, int>();
+            var projectVulnerabilitySummary = new Dictionary<Classification, int>
+            {
+                [Classification.High] = 0,
+                [Classification.Medium] = 0,
+                [Classification.Low] = 0,
+                [Classification.Unknown] = 0,
+            };
             foreach (var project in tenant.Projects)
             {
-                var vulnerabilitySummary = new Dictionary<Classification, int>();
+                var vulnerabilitySummary = new Dictionary<Classification, int>
+                {
+                    [Classification.High] = 0,
+                    [Classification.Medium] = 0,
+                    [Classification.Low] = 0,
+                    [Classification.Unknown] = 0,
+                };
                 foreach (var package in project.Packages)
                 {
                     foreach (var summary in package.Vulnerabilities.GroupBy(x => x.Classification))
                     {
                         vulnerabilitySummary[summary.Key] = summary.Count();
-                        projectVulnerabilitySummary[summary.Key] = projectVulnerabilitySummary.TryGetValue(summary.Key, out var amount) ? amount + summary.Count() : summary.Count();
+                        projectVulnerabilitySummary[summary.Key] += summary.Count();
                     }
                 }
                 
