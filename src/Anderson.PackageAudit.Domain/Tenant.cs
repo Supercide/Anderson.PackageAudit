@@ -165,6 +165,7 @@ namespace Anderson.PackageAudit.Domain
     {
         public static readonly TenantError TenantAlreadyContainsKey = new TenantError(400, "TenantAlreadyContainsKey");
         public static readonly TenantError UnknownTenant = new TenantError(404, "UnknownTenant");
+        public static readonly TenantError AlreadyExists = new TenantError(400, "AlreadyExists");
 
         protected TenantError(int errorCode, string errorMessage) : base(errorCode, errorMessage)
         {

@@ -1,8 +1,9 @@
 ﻿using System.Web.Http;
 using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Anderson.PackageAudit.Errors
+namespace Anderson.PackageAudit.Infrastructure.Errors
 {
 
     public class ErrorResolver : IErrorResolver

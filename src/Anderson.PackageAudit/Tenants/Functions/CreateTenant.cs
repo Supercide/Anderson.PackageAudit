@@ -1,7 +1,6 @@
 ﻿using Anderson.PackageAudit.Errors;
-using Anderson.PackageAudit.Errors.Extensions;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
-using Anderson.PackageAudit.Projects.Functions;
+using Anderson.PackageAudit.Infrastructure.Errors.Extensions;
 using Anderson.PackageAudit.Tenants.Pipelines;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

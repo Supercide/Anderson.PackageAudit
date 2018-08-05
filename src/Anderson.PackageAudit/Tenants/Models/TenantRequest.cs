@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Anderson.PackageAudit.Tenants.Models
+﻿namespace Anderson.PackageAudit.Tenants.Models
 {
     public class TenantRequest
     {

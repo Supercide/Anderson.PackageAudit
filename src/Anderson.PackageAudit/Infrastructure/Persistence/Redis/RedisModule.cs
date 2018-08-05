@@ -1,9 +1,9 @@
-﻿using Anderson.PackageAudit.SharedPipes.Caching.Redis;
+﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Redis;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
+namespace Anderson.PackageAudit.Infrastructure.Persistence.Redis
 {
     public class RedisModule: ServiceModule
     {

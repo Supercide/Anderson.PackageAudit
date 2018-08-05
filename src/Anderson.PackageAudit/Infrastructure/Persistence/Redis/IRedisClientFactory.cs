@@ -1,6 +1,6 @@
 ﻿using ServiceStack.Redis.Generic;
 
-namespace Anderson.PackageAudit.SharedPipes.Caching.Redis
+namespace Anderson.PackageAudit.Infrastructure.Persistence.Redis
 {
     public interface IRedisClientFactory<T>
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
-using Anderson.PackageAudit.Projects.Pipes;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.PackageAudit.SharedPipes.NoOp;

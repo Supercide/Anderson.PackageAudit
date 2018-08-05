@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
-using Anderson.PackageAudit.Projects.Functions;
 using Anderson.PackageAudit.Projects.Models;
 using Anderson.PackageAudit.Projects.Pipelines;
 using Anderson.PackageAudit.Projects.Pipes;

@@ -1,10 +1,11 @@
 ﻿using System.Security.Authentication;
 using Anderson.PackageAudit.Domain;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
+namespace Anderson.PackageAudit.Infrastructure.Persistence
 {
     public class MongoModule : ServiceModule
     {

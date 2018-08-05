@@ -1,11 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using Anderson.PackageAudit.Core.Errors;
-using Anderson.PackageAudit.Errors;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;

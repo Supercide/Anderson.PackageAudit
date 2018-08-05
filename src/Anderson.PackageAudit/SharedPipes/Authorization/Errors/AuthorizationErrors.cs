@@ -1,5 +1,4 @@
 ﻿using Anderson.PackageAudit.Core.Errors;
-using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.SharedPipes.Authorization.Constants;
 
 namespace Anderson.PackageAudit.SharedPipes.Authorization.Errors

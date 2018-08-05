@@ -1,6 +1,13 @@
-﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection;
+﻿using Anderson.PackageAudit.Enrolment;
+using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
-using Anderson.PackageAudit.Keys.Module;
+using Anderson.PackageAudit.Infrastructure.Errors;
+using Anderson.PackageAudit.Infrastructure.Persistence;
+using Anderson.PackageAudit.Infrastructure.Persistence.Redis;
+using Anderson.PackageAudit.Infrastructure.Pipes;
+using Anderson.PackageAudit.Projects;
+using Anderson.PackageAudit.Tenants;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Host.Config;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,14 +34,18 @@ namespace Anderson.PackageAudit
 
         public static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            serviceCollection.LoadModule<EnrolmentModule>();
+            serviceCollection.LoadModule<ProjectsModule>();
+            serviceCollection.LoadModule<TenantModule>();
+            serviceCollection.LoadModule<ErrorModule>();
+
             serviceCollection.LoadModule<ConfigurationModule>();
             serviceCollection.LoadModule<TokenParametersModule>();
+
+            serviceCollection.LoadModule<MongoModule>();
             serviceCollection.LoadModule<RedisModule>();
             serviceCollection.LoadModule<PipeModule>();
-            serviceCollection.LoadModule<KeyModule>();
-            serviceCollection.LoadModule<PipelineModule>();
-            serviceCollection.LoadModule<MongoModule>();
-            serviceCollection.LoadModule<ErrorModule>();
+            
         }
     }
 }

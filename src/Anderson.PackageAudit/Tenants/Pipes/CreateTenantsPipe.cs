@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
@@ -24,21 +24,23 @@ namespace Anderson.PackageAudit.Tenants.Pipes
         {
             var account = Thread.CurrentPrincipal.ToAccount();
 
-            IEnumerable<TenantResponse> tenants = _tenantCollection.Find(x => x.Accounts.Contains(account))
-                .ToList()
-                .Select(MapToProjectResponse);
+            if (_tenantCollection.Find(x => x.Name == request.Name).Any())
+            {
+                return TenantError.AlreadyExists;
+            }
+
+            _tenantCollection.InsertOne(new Tenant
+            {
+                Name = request.Name,
+                Accounts = new List<Account>
+                {
+                    account
+                },
+                CreatedAt = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
+            });;
 
             return Unit.Instance;
-        }
-
-        private TenantResponse MapToProjectResponse(Tenant tenant)
-        {
-            return new TenantResponse
-            {
-                Name = tenant.Name,
-                Id = tenant.Id,
-                CreatedAt = tenant.CreatedAt,
-            };
         }
     }
 }

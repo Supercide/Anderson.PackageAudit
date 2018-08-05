@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
+namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
     public abstract class ServiceModule
     {
