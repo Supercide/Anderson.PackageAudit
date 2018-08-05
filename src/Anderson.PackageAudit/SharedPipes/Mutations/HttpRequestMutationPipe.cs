@@ -29,13 +29,5 @@ namespace Anderson.PackageAudit.SharedPipes.Mutations
         }
     }
 
-    public class AuditMutation : HttpRequestMutationPipe<AuditRequest, Response<AuditResponse, Error>>
-    {
-        public override Response<AuditResponse, Error> Handle(HttpRequest request)
-        {
-            var model = SerialiseToModel(request);
-            model.ApiKey = Guid.Parse(request.Headers["X-API-KEY"].First());
-            return InnerHandler.Handle(model);
-        }
-    }
+    
 }

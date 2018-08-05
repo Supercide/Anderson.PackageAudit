@@ -17,15 +17,15 @@ namespace Anderson.PackageAudit.Keys.Pipelines
 
     public class KeyPiplines : IKeyPipelines
     {
-        private readonly PipelineDefinitionBuilder<HttpRequest, Response<Key, Error>> _builder;
+        private readonly PipelineDefinitionBuilder _builder;
 
-        public KeyPiplines(PipelineDefinitionBuilder<HttpRequest, Response<Key, Error>> builder)
+        public KeyPiplines(PipelineDefinitionBuilder builder)
         {
             _builder = builder;
         }
 
         public IRequestHandler<HttpRequest, Response<Key, Error>> GenerateKey => 
-            _builder.StartWith<AuthorizationPipe<Key>>()
+            _builder.StartWith<AuthorizationPipe<Key>, HttpRequest, Response<Key, Error>>()
                     .ThenWithMutation<HttpRequestMutationPipe<KeyRequest, Response<Key, Error>>, KeyRequest>()
                     .ThenWith<KeyCreationPipe>()
                     .Build();

@@ -6,9 +6,9 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization.Errors
 {
     public class AuthorizationErrors : Error
     {
-        public static AuthorizationErrors Unauthorized = new AuthorizationErrors(WellKnownAuthorizationErrorCodes.UnAuthorized, "Failed authorization");
+        public static AuthorizationErrors Unauthorized = new AuthorizationErrors(WellKnownErrorCodes.UnAuthorized, "Failed authorization");
 
-        public AuthorizationErrors(string errorCode, string errorMessage) : base(errorCode, errorMessage)
+        public AuthorizationErrors(int errorCode, string errorMessage) : base(errorCode, errorMessage)
         {
         }
     }

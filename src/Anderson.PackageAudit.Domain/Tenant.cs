@@ -52,6 +52,7 @@ namespace Anderson.PackageAudit.Domain
         public List<Project> Projects { get; set; }
         public List<Key> Keys { get; set; }
         public List<Account> Accounts { get; set; }
+        public DateTime CreatedAt { get; set; }
 
 
         public Response<Key, Error> GenerateKey(string name)
@@ -87,10 +88,12 @@ namespace Anderson.PackageAudit.Domain
             Packages = new Package[0];
         }
 
-        public string Name { get; set;  }
+        public string Title { get; set;  }
         public string Version { get; set;  }
         
         public IEnumerable<Package> Packages { get; set;  }
+        public DateTime LastUpdated { get; set; }
+        public string Tenant { get; set; }
     }
 
     public class Package 
@@ -151,19 +154,19 @@ namespace Anderson.PackageAudit.Domain
 
     public class KeyError : Error
     {
-        public KeyError(string errorCode, string errorMessage) : base(errorCode, errorMessage)
+        public KeyError(int errorCode, string errorMessage) : base(errorCode, errorMessage)
         {
         }
 
-        public static readonly KeyError InvalidKeyName = new KeyError("InvalidKeyName", "InvalidKeyName");
+        public static readonly KeyError InvalidKeyName = new KeyError(400, "InvalidKeyName");
     }
 
     public class TenantError : Error
     {
-        public static readonly TenantError TenantAlreadyContainsKey = new TenantError("TenantAlreadyContainsKey", "TenantAlreadyContainsKey");
-        public static readonly TenantError UnknownTenant = new TenantError("UnknownTenant", "UnknownTenant");
+        public static readonly TenantError TenantAlreadyContainsKey = new TenantError(400, "TenantAlreadyContainsKey");
+        public static readonly TenantError UnknownTenant = new TenantError(404, "UnknownTenant");
 
-        protected TenantError(string errorCode, string errorMessage) : base(errorCode, errorMessage)
+        protected TenantError(int errorCode, string errorMessage) : base(errorCode, errorMessage)
         {
         }
     }

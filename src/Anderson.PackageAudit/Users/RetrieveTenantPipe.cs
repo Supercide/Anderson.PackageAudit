@@ -61,7 +61,7 @@ namespace Anderson.PackageAudit.Users
                 
                 projectOverview.Add(new ProjectOverview
                 {
-                    Name = project.Name, 
+                    Name = project.Title, 
                     Version = project.Version,
                     LastUpdated = DateTime.Today,
                     Managers = new []{ "nuget" },

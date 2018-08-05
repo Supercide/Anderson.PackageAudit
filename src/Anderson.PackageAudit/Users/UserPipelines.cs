@@ -13,19 +13,19 @@ namespace Anderson.PackageAudit.Users
 {
     public class UserPipelines : IUserPipelines
     {
-        private readonly PipelineDefinitionBuilder<HttpRequest, Response<User, Error>> _builder;
+        private readonly PipelineDefinitionBuilder _builder;
 
-        public UserPipelines(PipelineDefinitionBuilder<HttpRequest, Response<User, Error>> builder)
+        public UserPipelines(PipelineDefinitionBuilder builder)
         {
             _builder = builder;
         }
 
-        public IRequestHandler<HttpRequest, Response<User, Error>> RetrieveCurrentUser => _builder.StartWith<AuthorizationPipe<User>>()
+        public IRequestHandler<HttpRequest, Response<User, Error>> RetrieveCurrentUser => _builder.StartWith<AuthorizationPipe<User>, HttpRequest, Response<User, Error>>()
             .ThenWithMutation<AccountMutationPipe<HttpRequest, Response<User, Error>>, Account>()
             .ThenWith<RetrieveUserPipe>()
             .Build();
 
-        public IRequestHandler<HttpRequest, Response<User, Error>> EnrolUser => _builder.StartWith<AuthorizationPipe<User>>()
+        public IRequestHandler<HttpRequest, Response<User, Error>> EnrolUser => _builder.StartWith<AuthorizationPipe<User>, HttpRequest, Response<User, Error>>()
             .ThenWithMutation<HttpRequestMutationPipe<EnrolUserRequest, Response<User, Error>>, EnrolUserRequest>()
             .ThenWith<EnrolUserPipe>()
             .Build();

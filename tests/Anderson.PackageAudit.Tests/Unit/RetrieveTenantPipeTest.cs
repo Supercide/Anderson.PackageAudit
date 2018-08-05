@@ -32,7 +32,7 @@ namespace Anderson.PackageAudit.Tests.Unit
                 {
                     new Project
                     {
-                        Name = "any package"
+                        Title = "any package"
                     }
                 }
             };
@@ -44,7 +44,7 @@ namespace Anderson.PackageAudit.Tests.Unit
                 {
                     new Project
                     {
-                        Name = "any project",
+                        Title = "any project",
                         Packages = new []
                         {
                             new Package

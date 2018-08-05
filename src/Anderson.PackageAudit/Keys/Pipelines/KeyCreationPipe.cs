@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Anderson.PackageAudit.Audit.Pipes;
+﻿using System.Threading;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
-using Anderson.PackageAudit.Errors;
-using Anderson.PackageAudit.Keys.Errors;
-using Anderson.PackageAudit.SharedPipes.Authorization.Errors;
+using Anderson.PackageAudit.Infrastructure;
 using Anderson.Pipelines.Responses;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Keys.Pipelines

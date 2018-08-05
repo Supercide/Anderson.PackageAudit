@@ -9,14 +9,15 @@ namespace Anderson.PackageAudit.Users
 {
     public class TenantPipelines : ITenantPipelines
     {
-        private readonly PipelineDefinitionBuilder<HttpRequest, Response<TenantOverview, Error>> _builder;
+        private readonly PipelineDefinitionBuilder _builder;
 
-        public TenantPipelines(PipelineDefinitionBuilder<HttpRequest, Response<TenantOverview, Error>> builder)
+        public TenantPipelines(PipelineDefinitionBuilder builder)
         {
             _builder = builder;
         }
 
-        public IRequestHandler<HttpRequest, Response<TenantOverview, Error>> RetrieveTenant => _builder.StartWith<AuthorizationPipe<TenantOverview>>()
+        public IRequestHandler<HttpRequest, Response<TenantOverview, Error>> RetrieveTenant => _builder
+            .StartWith<AuthorizationPipe<TenantOverview>, HttpRequest, Response<TenantOverview, Error>>()
             .ThenWith<RetrieveTenantPipe>()
             .Build();
     }
