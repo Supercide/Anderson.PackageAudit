@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Anderson.PackageAudit.Tests.Integration.EnrolmentTests
+namespace Anderson.PackageAudit.Tests.Integration
 {
     public class TokenHelper
     {

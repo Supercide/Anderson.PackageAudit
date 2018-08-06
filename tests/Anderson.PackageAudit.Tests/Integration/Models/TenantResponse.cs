@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Anderson.PackageAudit.Tests.Integration.EnrolmentTests
+namespace Anderson.PackageAudit.Tests.Integration.Models
 {
     public class TenantResponse
     {
