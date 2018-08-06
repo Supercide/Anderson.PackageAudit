@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Infrastructure;
 using Anderson.PackageAudit.SharedPipes.NoOp;
 using Anderson.PackageAudit.Tenants.Models;
+using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Tenants.Pipes
 {
-    public class GetTenantsPipe : Anderson.Pipelines.Definitions.PipelineDefinition<Unit, Response<IEnumerable<TenantResponse>, Error>>
+    public class GetTenantsPipe : Anderson.Pipelines.Definitions.PipelineDefinition<Unit>
     {
         private readonly IMongoCollection<Tenant> _tenantCollection;
 
@@ -20,7 +22,7 @@ namespace Anderson.PackageAudit.Tenants.Pipes
             _tenantCollection = tenantCollection;
         }
 
-        public override Response<IEnumerable<TenantResponse>, Error> Handle(Unit request)
+        public override Task HandleAsync(Unit request, Context context, CancellationToken token = default(CancellationToken))
         {
             var account = Thread.CurrentPrincipal.ToAccount();
 
@@ -28,7 +30,9 @@ namespace Anderson.PackageAudit.Tenants.Pipes
                 .ToList()
                 .Select(MapToProjectResponse);
 
-            return new Response<IEnumerable<TenantResponse>, Error>(tenants);
+            context.SetResponse(tenants);
+
+            return Task.CompletedTask;
         }
 
         private TenantResponse MapToProjectResponse(Tenant tenant)

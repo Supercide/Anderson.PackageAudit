@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
+using System.Threading.Tasks;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
@@ -10,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
 {
-    public class AuthorizationPipe<TSuccess> : PipelineDefinition<HttpRequest, Response<TSuccess, Error>>
+    public class AuthorizationPipe : PipelineDefinition<HttpRequest>
     {
         private readonly TokenValidationParameters _tokenValidationParameters;
 
@@ -19,18 +20,18 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
             _tokenValidationParameters = tokenValidationParameters;
         }
 
-        public override Response<TSuccess, Error> Handle(HttpRequest request)
+        public override Task HandleAsync(HttpRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
-            
-                var result = ExtractToken(request);
-                if (result.IsSuccess)
-                {
-                    Thread.CurrentPrincipal = ValidateToken(result.Success);
-                    return InnerHandler.Handle(request);
-                }
+            var result = ExtractToken(request);
+            if (result.IsSuccess)
+            {
+                Thread.CurrentPrincipal = ValidateToken(result.Success);
+                return InnerHandler.HandleAsync(request, context, token);
+            }
 
-                return result.Error;
-            
+            context.SetError(result.Error);
+
+            return Task.CompletedTask;
         }
 
         private static Response<string, Error> ExtractToken(HttpRequest request)

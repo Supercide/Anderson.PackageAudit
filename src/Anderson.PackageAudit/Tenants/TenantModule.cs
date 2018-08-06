@@ -23,8 +23,8 @@ namespace Anderson.PackageAudit.Tenants
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe<IEnumerable<TenantResponse>>, HttpRequest, Response<IEnumerable<TenantResponse>, Error>>()
-                    .ThenWithMutation<HttpRequestMutationPipe<Unit, Response<IEnumerable<TenantResponse>, Error>>, Unit>()
+                return builder.StartWith<AuthorizationPipe, HttpRequest>()
+                    .ThenWithMutation<HttpRequestMutationPipe<Unit>, Unit>()
                     .ThenWith<GetTenantsPipe>()
                     .Build() as GetTenantsPipeline;
             });
@@ -33,8 +33,8 @@ namespace Anderson.PackageAudit.Tenants
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe<Unit>, HttpRequest, Response<Unit, Error>>()
-                    .ThenWithMutation<HttpRequestMutationPipe<TenantRequest, Response<Unit, Error>>, TenantRequest>()
+                return builder.StartWith<AuthorizationPipe, HttpRequest>()
+                    .ThenWithMutation<HttpRequestMutationPipe<TenantRequest>, TenantRequest>()
                     .ThenWith<CreateTenantsPipe>()
                     .Build() as CreateTenantPipeline;
             });

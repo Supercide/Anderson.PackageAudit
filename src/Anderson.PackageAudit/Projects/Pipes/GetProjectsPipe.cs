@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Infrastructure;
 using Anderson.PackageAudit.Projects.Models;
 using Anderson.PackageAudit.SharedPipes.Authorization.Errors;
+using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 using MongoDB.Driver;
-using Package = Anderson.PackageAudit.Projects.Models.Package;
 
 namespace Anderson.PackageAudit.Projects.Pipes
 {
-    public class AuditProjectPipe : Anderson.Pipelines.Definitions.PipelineDefinition<AuditRequest, Response<IEnumerable<Package>, Error>>
+    public class AuditProjectPipe : PipelineDefinition<AuditRequest>
     {
-        public override Response<IEnumerable<Package>, Error> Handle(AuditRequest request)
+        public override Task HandleAsync(AuditRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 
-    public class GetProjectsPipe : Anderson.Pipelines.Definitions.PipelineDefinition<ProjectsRequest, Response<IEnumerable<ProjectResponse>, Error>>
+    public class GetProjectsPipe : Anderson.Pipelines.Definitions.PipelineDefinition<ProjectsRequest>
     {
         private readonly IMongoCollection<Project> _projectCollection;
         private readonly IMongoCollection<Tenant> _tenantCollection;
@@ -31,22 +32,25 @@ namespace Anderson.PackageAudit.Projects.Pipes
             _tenantCollection = tenantCollection;
         }
 
-        public override Response<IEnumerable<ProjectResponse>, Error> Handle(ProjectsRequest request)
+        public override Task HandleAsync(ProjectsRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
             var account = Thread.CurrentPrincipal.ToAccount();
             var isAuthorizedForTenant = _tenantCollection.Find(x => x.Accounts.Contains(account) && x.Name == request.Tenant)
                 .Any();
 
-            if (isAuthorizedForTenant)
+            if (!isAuthorizedForTenant)
             {
-                var projects =  _projectCollection.Find(x => x.Tenant == request.Tenant)
+                context.SetError(AuthorizationErrors.Unauthorized);
+                return Task.CompletedTask;
+            }
+
+            var projects =  _projectCollection.Find(x => x.Tenant == request.Tenant)
                     .ToList()
                     .Select(MapToProjectResponse);
 
-                return new Response<IEnumerable<ProjectResponse>, Error>(projects);
-            }
+            context.SetResponse(projects);
 
-            return AuthorizationErrors.Unauthorized;
+            return Task.CompletedTask;
         }
 
         private ProjectResponse MapToProjectResponse(Project project)

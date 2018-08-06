@@ -1,8 +1,10 @@
-﻿using Anderson.Pipelines.Definitions;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Anderson.Pipelines.Definitions;
 
 namespace Anderson.PackageAudit.SharedPipes.NoOp
 {
-    public class NoOpHandler<TRequest, TResponse> : PipelineDefinition<TRequest, TResponse>
+    public class NoOpHandler<TRequest, TResponse> : PipelineDefinition<TRequest>
     {
         private readonly TResponse _response;
 
@@ -11,9 +13,9 @@ namespace Anderson.PackageAudit.SharedPipes.NoOp
             _response = response;
         }
 
-        public override TResponse Handle(TRequest request)
+        public override Task HandleAsync(TRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
-            return _response;
+            return Task.CompletedTask;
         }
     }
 }

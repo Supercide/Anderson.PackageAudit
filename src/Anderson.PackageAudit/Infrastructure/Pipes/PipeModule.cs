@@ -17,9 +17,9 @@ namespace Anderson.PackageAudit.Infrastructure.Pipes
                 return (Func<Type, object>) Resolver;
             });
 
-            serviceCollection.AddSingleton(typeof(PipelineDefinitionBuilder));
-            serviceCollection.AddSingleton(typeof(AuthorizationPipe<>));
-            serviceCollection.AddSingleton(typeof(HttpRequestMutationPipe<,>));
+            serviceCollection.AddSingleton<PipelineDefinitionBuilder>();
+            serviceCollection.AddSingleton<AuthorizationPipe>();
+            serviceCollection.AddSingleton(typeof(HttpRequestMutationPipe<>));
         }
     }
 }

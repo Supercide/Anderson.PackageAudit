@@ -22,7 +22,7 @@ namespace Anderson.PackageAudit.Projects
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe<IEnumerable<ProjectResponse>>, HttpRequest, Response<IEnumerable<ProjectResponse>, Error>>()
+                return builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<ProjectsMutationPipe, ProjectsRequest>()
                     .ThenWith<GetProjectsPipe>()
                     .Build() as GetProjectsPipeline;
@@ -32,8 +32,8 @@ namespace Anderson.PackageAudit.Projects
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe<IEnumerable<Package>>, HttpRequest, Response<IEnumerable<Package>, Error>>()
-                    .ThenWithMutation<HttpRequestMutationPipe<AuditRequest, Response<IEnumerable<Package>, Error>>, AuditRequest>()
+                return builder.StartWith<AuthorizationPipe, HttpRequest>()
+                    .ThenWithMutation<HttpRequestMutationPipe<AuditRequest>, AuditRequest>()
                     .ThenWith<AuditProjectPipe>()
                     .Build() as AuditProjectPipeline;
             });

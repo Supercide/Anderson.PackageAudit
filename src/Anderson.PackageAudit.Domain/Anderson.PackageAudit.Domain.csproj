@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Anderson.Pipelines" Version="2.0.0.21-RF001" />
+    <PackageReference Include="Anderson.Pipelines" Version="2.0.0.22-RF001" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
   </ItemGroup>
 

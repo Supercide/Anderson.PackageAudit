@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Tenants.Pipelines
 {
-    public interface CreateTenantPipeline : IRequestHandler<HttpRequest, Response<Unit, Error>>
+    public interface CreateTenantPipeline : IRequestHandler<HttpRequest>
     {
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Tenants.Pipelines
 {
-    public interface GetTenantsPipeline : IRequestHandler<HttpRequest, Response<IEnumerable<TenantResponse>, Error>>
+    public interface GetTenantsPipeline : IRequestHandler<HttpRequest>
     {
 
     }

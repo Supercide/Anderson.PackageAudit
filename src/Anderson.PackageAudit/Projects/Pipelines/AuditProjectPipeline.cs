@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Projects.Pipelines
 {
-    public interface AuditProjectPipeline : IRequestHandler<HttpRequest, Response<IEnumerable<Package>, Error>>
+    public interface AuditProjectPipeline : IRequestHandler<HttpRequest>
     {
     }
 }

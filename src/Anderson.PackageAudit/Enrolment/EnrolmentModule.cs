@@ -25,8 +25,8 @@ namespace Anderson.PackageAudit.Enrolment
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                IRequestHandler<HttpRequest, Response<TenantResponse, Error>> pipeline =  builder.StartWith<AuthorizationPipe<TenantResponse>, HttpRequest, Response<TenantResponse, Error>>()
-                    .ThenWithMutation<HttpRequestMutationPipe<EnrolmentRequest, Response<TenantResponse, Error>>, EnrolmentRequest>()
+                IRequestHandler<HttpRequest> pipeline =  builder.StartWith<AuthorizationPipe, HttpRequest>()
+                    .ThenWithMutation<HttpRequestMutationPipe<EnrolmentRequest>, EnrolmentRequest>()
                     .ThenWith<EnrolmentPipe>()
                     .Build();
 

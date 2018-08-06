@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Anderson.PackageAudit.Core.Errors;
+using System.Threading.Tasks;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Infrastructure;
-using Anderson.PackageAudit.SharedPipes.NoOp;
 using Anderson.PackageAudit.Tenants.Models;
-using Anderson.Pipelines.Responses;
+using Anderson.Pipelines.Definitions;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Tenants.Pipes
 {
-    public class CreateTenantsPipe : Anderson.Pipelines.Definitions.PipelineDefinition<TenantRequest, Response<Unit, Error>>
+    public class CreateTenantsPipe : PipelineDefinition<TenantRequest>
     {
         private readonly IMongoCollection<Tenant> _tenantCollection;
 
@@ -20,16 +19,16 @@ namespace Anderson.PackageAudit.Tenants.Pipes
             _tenantCollection = tenantCollection;
         }
 
-        public override Response<Unit, Error> Handle(TenantRequest request)
+        public override Task HandleAsync(TenantRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
             var account = Thread.CurrentPrincipal.ToAccount();
 
             if (_tenantCollection.Find(x => x.Name == request.Name).Any())
             {
-                return TenantError.AlreadyExists;
+                context.SetError(TenantError.AlreadyExists);
             }
 
-            _tenantCollection.InsertOne(new Tenant
+            return _tenantCollection.InsertOneAsync(new Tenant
             {
                 Name = request.Name,
                 Accounts = new List<Account>
@@ -38,9 +37,7 @@ namespace Anderson.PackageAudit.Tenants.Pipes
                 },
                 CreatedAt = DateTime.UtcNow,
                 Id = Guid.NewGuid(),
-            });;
-
-            return Unit.Instance;
+            }, cancellationToken: token);;
         }
     }
 }

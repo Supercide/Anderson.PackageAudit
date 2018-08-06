@@ -2,6 +2,7 @@
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.Errors.Extensions;
 using Anderson.PackageAudit.Tenants.Pipelines;
+using Anderson.Pipelines.Definitions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -17,13 +18,15 @@ namespace Anderson.PackageAudit.Tenants.Functions
             [Inject]IErrorResolver errorResolver,
             [Inject]GetTenantsPipeline pipeline)
         {
-            var response = pipeline.Handle(req);
-            if (response.IsSuccess)
+            var context = new Context();
+            var response = pipeline.HandleAsync(req, context);
+            if (!context.HasError)
             {
-                return new OkObjectResult(response.Success);
+                return new OkObjectResult(context.GetResponse<object>());
             }
 
-            return response.Error.ToActionResult(errorResolver.Resolve);
+            return null;
+            //return response.Error.ToActionResult(errorResolver.Resolve);
         }
     }
 }
