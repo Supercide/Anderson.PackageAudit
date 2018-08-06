@@ -4,6 +4,7 @@ using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Anderson.PackageAudit.Infrastructure.Errors;
 using Anderson.PackageAudit.Infrastructure.Persistence;
+using Anderson.PackageAudit.Infrastructure.Persistence.Mongo;
 using Anderson.PackageAudit.Infrastructure.Persistence.Redis;
 using Anderson.PackageAudit.Infrastructure.Pipes;
 using Anderson.PackageAudit.Projects;

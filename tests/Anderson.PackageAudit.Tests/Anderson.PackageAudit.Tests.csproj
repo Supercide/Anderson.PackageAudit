@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Integration\MarketingPreferenceTest\**" />
+    <Compile Remove="Integration\TenantTests\**" />
+    <EmbeddedResource Remove="Integration\MarketingPreferenceTest\**" />
+    <EmbeddedResource Remove="Integration\TenantTests\**" />
+    <None Remove="Integration\MarketingPreferenceTest\**" />
+    <None Remove="Integration\TenantTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="Moq" Version="4.9.0" />
@@ -14,11 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Anderson.PackageAudit\Anderson.PackageAudit.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Integration\MarketingPreferenceTest\" />
-    <Folder Include="Integration\TenantTests\" />
   </ItemGroup>
 
 </Project>

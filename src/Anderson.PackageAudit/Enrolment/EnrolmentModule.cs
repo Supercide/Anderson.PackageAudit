@@ -7,6 +7,7 @@ using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.PackageAudit.Tenants.Models;
+using Anderson.Pipelines.Handlers;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,14 +19,18 @@ namespace Anderson.PackageAudit.Enrolment
     {
         public override void Load(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<EnrolmentPipe>();
+
             serviceCollection.AddSingleton(provider =>
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe<TenantResponse>, HttpRequest, Response<TenantResponse, Error>>()
+                IRequestHandler<HttpRequest, Response<TenantResponse, Error>> pipeline =  builder.StartWith<AuthorizationPipe<TenantResponse>, HttpRequest, Response<TenantResponse, Error>>()
                     .ThenWithMutation<HttpRequestMutationPipe<EnrolmentRequest, Response<TenantResponse, Error>>, EnrolmentRequest>()
                     .ThenWith<EnrolmentPipe>()
-                    .Build() as EnrolmentPipeline;
+                    .Build();
+
+                return new EnrolmentPipeline(pipeline);
             });
         }
     }
