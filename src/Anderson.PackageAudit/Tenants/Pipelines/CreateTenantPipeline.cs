@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Tenants.Pipelines
 {
-    public interface CreateTenantPipeline : IRequestHandler<HttpRequest>
+    public class CreateTenantPipeline : Pipeline<HttpRequest>
     {
+        public CreateTenantPipeline(IRequestHandler<HttpRequest> pipeline) : base(pipeline)
+        {
+        }
     }
 }

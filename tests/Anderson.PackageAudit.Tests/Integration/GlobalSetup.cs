@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests.Integration
@@ -50,6 +51,8 @@ namespace Anderson.PackageAudit.Tests.Integration
         public void TearDown()
         {
             _host.Dispose();
+            MongoClient client = new MongoClient();
+            client.DropDatabase("AuditorTests");
         }
     }
 }

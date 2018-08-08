@@ -13,7 +13,7 @@ namespace Anderson.PackageAudit.Infrastructure.Errors
             switch (error.ErrorType)
             {
                 case ErrorType.RequestError:
-                    return new BadRequestObjectResult(error.ErrorMessage);
+                    return new BadRequestObjectResult(error);
                 case ErrorType.AuthenticationError:
                     return new UnauthorizedResult();
                 default:

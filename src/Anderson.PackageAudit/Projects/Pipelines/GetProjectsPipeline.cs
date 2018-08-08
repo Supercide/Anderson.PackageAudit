@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Projects.Pipelines
 {
-    public interface GetProjectsPipeline : IRequestHandler<HttpRequest>
+    public class GetProjectsPipeline : Pipeline<HttpRequest>
     {
-
+        public GetProjectsPipeline(IRequestHandler<HttpRequest> pipeline) : base(pipeline)
+        {
+        }
     }
 }

@@ -14,7 +14,7 @@ using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Enrolment.Pipes
 {
-    public class EnrolmentPipe : Anderson.Pipelines.Definitions.PipelineDefinition<EnrolmentRequest>
+    public class EnrolmentPipe : PipelineDefinition<EnrolmentRequest>
     {
         private readonly IMongoCollection<User> _userCollection;
         private readonly IMongoCollection<Tenant> _tenantCollection;
@@ -28,27 +28,25 @@ namespace Anderson.PackageAudit.Enrolment.Pipes
         public override async Task HandleAsync(EnrolmentRequest request, Context context, CancellationToken token)
         {
             var account = Thread.CurrentPrincipal.ToAccount();
-            var userExists = _userCollection.Find(x => x.Accounts.Contains(account)).Any();
 
             var accounts = new List<Account>
             {
                 account
             };
-            try
-            {
+                if (_tenantCollection.Find(x => x.Name == request.Name).Any())
+                {
+                    context.SetError(EnrolmentError.TenantNameInUse);
+                    return;
+                }
+
                 await _tenantCollection.InsertOneAsync(new Tenant
                 {
                     Name = request.Name,
                     Accounts = accounts
                 }, cancellationToken: token);
-            }
-            catch (Exception)
-            {
-                context.SetError(EnrolmentError.TenantNameInUse);
-            }
             
 
-            if (!userExists)
+            if (!_userCollection.Find(x => x.Accounts.Contains(account)).Any())
             {
                 await _userCollection.InsertOneAsync(new User
                 {

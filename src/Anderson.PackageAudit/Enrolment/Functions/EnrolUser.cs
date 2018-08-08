@@ -1,9 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Anderson.PackageAudit.Enrolment.Errors;
 using Anderson.PackageAudit.Enrolment.Pipelines;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.Errors.Extensions;
+using Anderson.PackageAudit.Tenants.Models;
 using Anderson.Pipelines.Definitions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +24,13 @@ namespace Anderson.PackageAudit.Enrolment.Functions
         {
             var context = new Context();
             await pipeline.HandleAsync(req, context);
-            if (!context.HasError)
+
+            if (context.HasError)
             {
-                return new OkObjectResult(context.GetResponse<object>());
+                return context.GetError<EnrolmentError>().ToActionResult(errorResolver.Resolve);
             }
 
-            return null; //response.Error.ToActionResult(errorResolver.Resolve);
+            return new OkObjectResult(context.GetResponse<TenantResponse>());
         }
     }
 }

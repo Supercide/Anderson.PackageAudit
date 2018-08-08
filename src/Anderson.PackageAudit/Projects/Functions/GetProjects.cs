@@ -1,7 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.Errors.Extensions;
+using Anderson.PackageAudit.Projects.Errors;
+using Anderson.PackageAudit.Projects.Models;
 using Anderson.PackageAudit.Projects.Pipelines;
 using Anderson.Pipelines.Definitions;
 using Microsoft.AspNetCore.Http;
@@ -15,19 +20,24 @@ namespace Anderson.PackageAudit.Projects.Functions
     {
         [FunctionName(nameof(GetProjects))]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "tenant/{tenant}/projects")]HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "tenants/{tenant}/projects")]HttpRequest req,
             [Inject]IErrorResolver errorResolver,
-            [Inject]GetProjectsPipeline pipeline)
+            [Inject]GetProjectsPipeline pipeline,
+            [FromRoute]string tenant)
         {
-            var context = new Context();
-            await pipeline.HandleAsync(req, context);
-            if (!context.HasError)
+            var context = new Context
             {
-                return new OkObjectResult(context.GetResponse<object>());
+                ["tenant"]= tenant
+            };
+            await pipeline.HandleAsync(req, context);
+
+            if (context.HasError)
+            {
+
+                return context.GetAllErrors().Cast<Error>().First().ToActionResult(errorResolver.Resolve);
             }
 
-            return null;
-            //return response.Error.ToActionResult(errorResolver.Resolve);
+            return new OkObjectResult(context.GetResponse<IEnumerable<ProjectResponse>>());
         }
     }
 }

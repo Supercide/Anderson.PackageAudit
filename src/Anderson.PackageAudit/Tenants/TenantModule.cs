@@ -8,6 +8,7 @@ using Anderson.PackageAudit.SharedPipes.NoOp;
 using Anderson.PackageAudit.Tenants.Models;
 using Anderson.PackageAudit.Tenants.Pipelines;
 using Anderson.PackageAudit.Tenants.Pipes;
+using Anderson.Pipelines.Handlers;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,24 +20,30 @@ namespace Anderson.PackageAudit.Tenants
     {
         public override void Load(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddSingleton<GetTenantsPipe>();
+            serviceCollection.AddSingleton<CreateTenantsPipe>();
             serviceCollection.AddSingleton(provider =>
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe, HttpRequest>()
+                IRequestHandler<HttpRequest> pipeline = builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<HttpRequestMutationPipe<Unit>, Unit>()
                     .ThenWith<GetTenantsPipe>()
-                    .Build() as GetTenantsPipeline;
+                    .Build();
+
+                return new GetTenantsPipeline(pipeline);
             });
 
             serviceCollection.AddSingleton(provider =>
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();
 
-                return builder.StartWith<AuthorizationPipe, HttpRequest>()
+                var pipeline = builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<HttpRequestMutationPipe<TenantRequest>, TenantRequest>()
                     .ThenWith<CreateTenantsPipe>()
-                    .Build() as CreateTenantPipeline;
+                    .Build();
+
+                return new CreateTenantPipeline(pipeline);
             });
         }
     }

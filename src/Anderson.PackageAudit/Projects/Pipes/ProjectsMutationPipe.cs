@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Anderson.PackageAudit.Projects.Pipes
 {
-    public class ProjectsMutationPipe : HttpRequestMutationPipe<ProjectsRequest>
+    public class ProjectsMutationPipe : PipelineMutationDefinition<HttpRequest, ProjectsRequest>
     {
         public override Task HandleAsync(HttpRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
             return InnerHandler.HandleAsync(new ProjectsRequest
             {
-                Tenant = request.Path.Value.Split('/')[1]
+                Tenant = (string)context["tenant"]
             }, context, token);
         }
     }

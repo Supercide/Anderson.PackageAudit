@@ -40,6 +40,14 @@ namespace Anderson.PackageAudit.Infrastructure.Persistence.Mongo
                 var collection = mongodb.GetCollection<Tenant>(nameof(Tenant));
                 return collection;
             });
+
+
+            serviceCollection.AddSingleton(provider =>
+            {
+                var mongodb = provider.GetService<IMongoDatabase>();
+                var collection = mongodb.GetCollection<Project>(nameof(Project));
+                return collection;
+            });
         }
     }
 
