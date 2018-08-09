@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Anderson.Infrastructure.Authorization;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Infrastructure;
@@ -20,8 +22,8 @@ namespace Anderson.PackageAudit.Projects.Pipes
             return Task.CompletedTask;
         }
     }
-
-    public class GetProjectsPipe : Anderson.Pipelines.Definitions.PipelineDefinition<ProjectsRequest>
+    
+    public class GetProjectsPipe : PipelineDefinition<ProjectsRequest>
     {
         private readonly IMongoCollection<Project> _projectCollection;
         private readonly IMongoCollection<Tenant> _tenantCollection;
@@ -34,23 +36,43 @@ namespace Anderson.PackageAudit.Projects.Pipes
 
         public override Task HandleAsync(ProjectsRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
-            var account = Thread.CurrentPrincipal.ToAccount();
-            var isAuthorizedForTenant = _tenantCollection.Find(x => x.Accounts.Contains(account) && x.Name == request.Tenant)
-                .Any();
-
-            if (!isAuthorizedForTenant)
+            if (IsAuthorizedForTenant(request, context))
             {
-                context.SetError(AuthorizationErrors.Unauthorized);
+                IEnumerable<ProjectResponse> projects = new[]
+                {
+                    new ProjectResponse
+                    {
+                        Packages = 10,
+                        Vulnerabilities = new Vulnerabilities
+                        {
+                            High = 10,
+                            Low = 9,
+                            Unknown = 2,
+                            Medium = 6
+                        },
+                        Version = "3.0.1",
+                        LastUpdated = DateTime.Today,
+                        Title = "Argon"
+                    },
+                };
+
+                context.SetResponse(projects);
+
                 return Task.CompletedTask;
             }
 
-            var projects =  _projectCollection.Find(x => x.Tenant == request.Tenant)
-                    .ToList()
-                    .Select(MapToProjectResponse);
-
-            context.SetResponse(projects);
-
+            context.SetError(AuthorizationErrors.Unauthorized);
             return Task.CompletedTask;
+        }
+
+        private bool IsAuthorizedForTenant(ProjectsRequest request, Context context)
+        {
+            var account = context[WellKnownContextKeys.Account] as Account;
+
+            var isAuthorizedForTenant = _tenantCollection.Find(x => x.Accounts.Contains(account) && x.Name == request.Tenant)
+                .Any();
+
+            return isAuthorizedForTenant;
         }
 
         private ProjectResponse MapToProjectResponse(Project project)

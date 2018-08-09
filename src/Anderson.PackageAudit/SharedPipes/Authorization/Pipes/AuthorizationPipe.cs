@@ -3,7 +3,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Anderson.Infrastructure.Authorization;
 using Anderson.PackageAudit.Core.Errors;
+using Anderson.PackageAudit.Infrastructure;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +28,7 @@ namespace Anderson.PackageAudit.SharedPipes.Authorization.Pipes
             if (result.IsSuccess)
             {
                 Thread.CurrentPrincipal = ValidateToken(result.Success);
+                context[WellKnownContextKeys.Account] = Thread.CurrentPrincipal.ToAccount();
                 return InnerHandler.HandleAsync(request, context, token);
             }
 

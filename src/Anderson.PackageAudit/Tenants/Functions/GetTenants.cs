@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Core.Errors;
-using Anderson.PackageAudit.Enrolment.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.Errors.Extensions;

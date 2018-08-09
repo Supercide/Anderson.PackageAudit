@@ -20,8 +20,8 @@ namespace Anderson.PackageAudit.Tenants
     {
         public override void Load(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<GetTenantsPipe>();
-            serviceCollection.AddSingleton<CreateTenantsPipe>();
+            serviceCollection.AddSingleton<GetTenantsPipe, GetTenantsPipe>();
+            serviceCollection.AddSingleton<CreateTenantsPipe, CreateTenantsPipe>();
             serviceCollection.AddSingleton(provider =>
             {
                 var builder = provider.GetService<PipelineDefinitionBuilder>();

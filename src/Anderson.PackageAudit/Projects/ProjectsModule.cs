@@ -14,8 +14,8 @@ namespace Anderson.PackageAudit.Projects
     {
         public override void Load(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<GetProjectsPipe>();
-            serviceCollection.AddSingleton<ProjectsMutationPipe>();
+            serviceCollection.AddSingleton<GetProjectsPipe, GetProjectsPipe>();
+            serviceCollection.AddSingleton<ProjectsMutationPipe, ProjectsMutationPipe>();
 
             serviceCollection.AddSingleton(provider =>
             {

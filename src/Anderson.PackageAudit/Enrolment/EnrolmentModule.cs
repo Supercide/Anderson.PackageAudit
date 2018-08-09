@@ -19,7 +19,7 @@ namespace Anderson.PackageAudit.Enrolment
     {
         public override void Load(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<EnrolmentPipe>();
+            serviceCollection.AddScoped<EnrolmentPipe, EnrolmentPipe>();
 
             serviceCollection.AddSingleton(provider =>
             {
