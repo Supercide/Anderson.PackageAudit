@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
-using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.PackageAudit.SharedPipes.NoOp;
@@ -9,22 +8,28 @@ using Anderson.PackageAudit.Tenants.Models;
 using Anderson.PackageAudit.Tenants.Pipelines;
 using Anderson.PackageAudit.Tenants.Pipes;
 using Anderson.Pipelines.Handlers;
-using Anderson.Pipelines.Responses;
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using PipelineDefinitionBuilder = Anderson.Pipelines.Builders.PipelineDefinitionBuilder;
 
 namespace Anderson.PackageAudit.Tenants
 {
-    public class TenantModule : ServiceModule
+    public class TenantModule : Module
     {
-        public override void Load(IServiceCollection serviceCollection)
+        protected override void Load(ContainerBuilder containerBuilder)
         {
-            serviceCollection.AddSingleton<GetTenantsPipe, GetTenantsPipe>();
-            serviceCollection.AddSingleton<CreateTenantsPipe, CreateTenantsPipe>();
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.RegisterType<GetTenantsPipe>()
+                            .SingleInstance()
+                            .AsSelf();
+
+            containerBuilder.RegisterType<CreateTenantsPipe>()
+                            .SingleInstance()
+                            .AsSelf();
+
+            containerBuilder.Register(provider =>
             {
-                var builder = provider.GetService<PipelineDefinitionBuilder>();
+                var builder = provider.Resolve<PipelineDefinitionBuilder>();
 
                 IRequestHandler<HttpRequest> pipeline = builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<HttpRequestMutationPipe<Unit>, Unit>()
@@ -34,9 +39,9 @@ namespace Anderson.PackageAudit.Tenants
                 return new GetTenantsPipeline(pipeline);
             });
 
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.Register(provider =>
             {
-                var builder = provider.GetService<PipelineDefinitionBuilder>();
+                var builder = provider.Resolve<PipelineDefinitionBuilder>();
 
                 var pipeline = builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<HttpRequestMutationPipe<TenantRequest>, TenantRequest>()

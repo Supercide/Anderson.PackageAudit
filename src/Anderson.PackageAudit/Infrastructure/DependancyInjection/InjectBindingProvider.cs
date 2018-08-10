@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.Azure.WebJobs.Host.Bindings;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
     public class InjectBindingProvider : IBindingProvider
     {
-        public static readonly ConcurrentDictionary<Guid, IServiceScope> Scopes =
-            new ConcurrentDictionary<Guid, IServiceScope>();
+        public static readonly ConcurrentDictionary<Guid, ILifetimeScope> Scopes =
+            new ConcurrentDictionary<Guid, ILifetimeScope>();
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILifetimeScope _lifetime;
 
-        public InjectBindingProvider(IServiceProvider serviceProvider)
+        public InjectBindingProvider(ILifetimeScope lifetimeScope)
         {
-            _serviceProvider = serviceProvider;
+            _lifetime = lifetimeScope;
         }
 
         public Task<IBinding> TryCreateAsync(BindingProviderContext context)
         {
-            IBinding binding = new InjectBinding(_serviceProvider, context.Parameter.ParameterType);
+            IBinding binding = new InjectBinding(_lifetime, context.Parameter.ParameterType);
             return Task.FromResult(binding);
         }
     }

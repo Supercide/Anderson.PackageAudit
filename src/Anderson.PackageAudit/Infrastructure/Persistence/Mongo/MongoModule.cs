@@ -1,19 +1,19 @@
 ﻿using System.Security.Authentication;
 using Anderson.PackageAudit.Domain;
-using Anderson.PackageAudit.Infrastructure.DependancyInjection;
+using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Infrastructure.Persistence.Mongo
 {
-    public class MongoModule : ServiceModule
+    public class MongoModule : Module
     {
-        public override void Load(IServiceCollection serviceCollection)
+        protected override void Load(ContainerBuilder serviceCollection)
         {
-            serviceCollection.AddSingleton(provider =>
+            serviceCollection.Register(provider =>
             {
-                var configuration = provider.GetService<IConfiguration>();
+                var configuration = provider.Resolve<IConfiguration>();
 
                 var mongoUrl = new MongoUrl(configuration["mongodb:connectionstring"]);
                 MongoClientSettings settings = MongoClientSettings.FromUrl(mongoUrl);
@@ -25,29 +25,29 @@ namespace Anderson.PackageAudit.Infrastructure.Persistence.Mongo
                 var mongoClient = new MongoClient(settings);
                 return mongoClient.GetDatabase(mongoUrl.DatabaseName);
                 
-            });
+            }).SingleInstance().AsSelf();
 
-            serviceCollection.AddSingleton(provider =>
+            serviceCollection.Register(provider =>
             {
-                var mongodb = provider.GetService<IMongoDatabase>();
+                var mongodb = provider.Resolve<IMongoDatabase>();
                 var collection = mongodb.GetCollection<User>(nameof(User));
                 return collection;
-            });
+            }).SingleInstance().AsSelf();
 
-            serviceCollection.AddSingleton(provider =>
+            serviceCollection.Register(provider =>
             {
-                var mongodb = provider.GetService<IMongoDatabase>();
+                var mongodb = provider.Resolve<IMongoDatabase>();
                 var collection = mongodb.GetCollection<Tenant>(nameof(Tenant));
                 return collection;
-            });
+            }).SingleInstance().AsSelf();
 
 
-            serviceCollection.AddSingleton(provider =>
+            serviceCollection.Register(provider =>
             {
-                var mongodb = provider.GetService<IMongoDatabase>();
+                var mongodb = provider.Resolve<IMongoDatabase>();
                 var collection = mongodb.GetCollection<Project>(nameof(Project));
                 return collection;
-            });
+            }).SingleInstance().AsSelf();
         }
     }
 

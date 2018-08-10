@@ -1,27 +1,26 @@
-﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection;
+﻿using Autofac;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Redis;
 
 namespace Anderson.PackageAudit.Infrastructure.Persistence.Redis
 {
-    public class RedisModule: ServiceModule
+    public class RedisModule: Module
     {
-        public override void Load(IServiceCollection serviceCollection)
+        protected override void Load(ContainerBuilder containerBuilder)
         {
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.Register(provider =>
             {
-                var configuration = provider.GetService<IConfiguration>();
+                var configuration = provider.Resolve<IConfiguration>();
                 return new RedisManagerPool(configuration["redis:connectionstring"]);
-            });
+            }).InstancePerLifetimeScope().AsSelf();
 
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.Register(provider =>
             {
-                var managerPool = provider.GetService<RedisManagerPool>();
+                var managerPool = provider.Resolve<RedisManagerPool>();
                 return managerPool.GetClient();
-            });
+            }).InstancePerLifetimeScope().AsSelf();
 
-            serviceCollection.AddScoped(typeof(IRedisClientFactory<>), typeof(RedisClientFactory<>));
+            containerBuilder.RegisterGeneric(typeof(RedisClientFactory<>)).As(typeof(RedisClientFactory<>)).InstancePerLifetimeScope();
         }
     }
 }

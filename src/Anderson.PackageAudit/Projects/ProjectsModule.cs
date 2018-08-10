@@ -4,22 +4,22 @@ using Anderson.PackageAudit.Projects.Pipelines;
 using Anderson.PackageAudit.Projects.Pipes;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
+using Autofac;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using PipelineDefinitionBuilder = Anderson.Pipelines.Builders.PipelineDefinitionBuilder;
 
 namespace Anderson.PackageAudit.Projects
 {
-    public class ProjectsModule : ServiceModule
+    public class ProjectsModule : Module
     {
-        public override void Load(IServiceCollection serviceCollection)
+        protected override void Load(ContainerBuilder containerBuilder)
         {
-            serviceCollection.AddSingleton<GetProjectsPipe, GetProjectsPipe>();
-            serviceCollection.AddSingleton<ProjectsMutationPipe, ProjectsMutationPipe>();
+            containerBuilder.RegisterType<GetProjectsPipe>().SingleInstance().AsSelf();
+            containerBuilder.RegisterType<ProjectsMutationPipe>().SingleInstance().AsSelf();
 
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.Register(provider =>
             {
-                var builder = provider.GetService<PipelineDefinitionBuilder>();
+                var builder = provider.Resolve<PipelineDefinitionBuilder>();
 
                 return new GetProjectsPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<ProjectsMutationPipe, ProjectsRequest>()
@@ -27,9 +27,9 @@ namespace Anderson.PackageAudit.Projects
                     .Build());
             });
 
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.Register(provider =>
             {
-                var builder = provider.GetService<PipelineDefinitionBuilder>();
+                var builder = provider.Resolve<PipelineDefinitionBuilder>();
 
                 return builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<HttpRequestMutationPipe<AuditRequest>, AuditRequest>()
@@ -38,6 +38,4 @@ namespace Anderson.PackageAudit.Projects
             });
         }
     }
-
-    
 }

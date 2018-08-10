@@ -1,25 +1,26 @@
 ﻿using System;
-using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
 using Anderson.PackageAudit.SharedPipes.Mutations;
 using Anderson.Pipelines.Builders;
+using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Anderson.PackageAudit.Infrastructure.Pipes
 {
-    public class PipeModule : ServiceModule
+    public class PipeModule : Module
     {
-        public override void Load(IServiceCollection serviceCollection)
+        protected override void Load(ContainerBuilder containerBuilder)
         {
-            serviceCollection.AddSingleton(provider =>
+            containerBuilder.Register(provider =>
             {
-                object Resolver(Type type) => provider.GetService(type);
+                object Resolver(Type type) => provider.Resolve(type);
                 return (Func<Type, object>) Resolver;
-            });
+            }).SingleInstance().AsSelf();
 
-            serviceCollection.AddSingleton<PipelineDefinitionBuilder>();
-            serviceCollection.AddSingleton<AuthorizationPipe>();
-            serviceCollection.AddSingleton(typeof(HttpRequestMutationPipe<>));
+            containerBuilder.RegisterType<PipelineDefinitionBuilder>();
+            containerBuilder.RegisterType<AuthorizationPipe>();
+            containerBuilder.RegisterGeneric(typeof(HttpRequestMutationPipe<>))
+                .As(typeof(HttpRequestMutationPipe<>));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Host.Bindings;
 using Microsoft.Azure.WebJobs.Host.Protocols;
@@ -11,12 +12,12 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
     public class InjectBinding : IBinding
     {
         private readonly Type _type;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILifetimeScope _lifetime;
 
-        public InjectBinding(IServiceProvider serviceProvider, Type type)
+        public InjectBinding(ILifetimeScope lifetime, Type type)
         {
             _type = type;
-            _serviceProvider = serviceProvider;
+            _lifetime = lifetime;
         }
 
         public bool FromAttribute => true;
@@ -28,8 +29,8 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
         {
             await Task.Yield();
 
-            var scope = InjectBindingProvider.Scopes.GetOrAdd(context.FunctionInstanceId, _ => _serviceProvider.CreateScope());
-            var value = scope.ServiceProvider.GetRequiredService(_type);
+            var scope = InjectBindingProvider.Scopes.GetOrAdd(context.FunctionInstanceId, _ => _lifetime.BeginLifetimeScope());
+            var value = scope.Resolve(_type);
 
             return await BindAsync(value, context.ValueContext);
         }

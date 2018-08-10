@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Anderson.PackageAudit.Enrolment.Pipelines;
+﻿using Anderson.PackageAudit.Enrolment.Pipelines;
 using Anderson.PackageAudit.Tenants.Pipelines;
+using Autofac;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Anderson.PackageAudit.Tests.Unit
@@ -15,20 +12,20 @@ namespace Anderson.PackageAudit.Tests.Unit
         [Test]
         public void GivenEnrolmentIsRegistered_WhenResolvingService_ThenResolvesService()
         {
-            var serviceCollection = new ServiceCollection();
-            Startup.ConfigureServices(serviceCollection);
-            var provider = serviceCollection.BuildServiceProvider();
-            var pipeline = provider.GetService<EnrolmentPipeline>();
+            var builder = new ContainerBuilder();
+            Startup.ConfigureServices(builder);
+            var provider = builder.Build();
+            var pipeline = provider.Resolve<EnrolmentPipeline>();
             pipeline.Should().NotBe(null);
         }
 
         [Test]
         public void GivenGetTenantsPipeline_WhenResolvingService_ThenResolvesService()
         {
-            var serviceCollection = new ServiceCollection();
-            Startup.ConfigureServices(serviceCollection);
-            var provider = serviceCollection.BuildServiceProvider();
-            var pipeline = provider.GetService<GetTenantsPipeline>();
+            var builder = new ContainerBuilder();
+            Startup.ConfigureServices(builder);
+            var provider = builder.Build();
+            var pipeline = provider.Resolve<GetTenantsPipeline>();
             pipeline.Should().NotBe(null);
         }
     }

@@ -1,21 +1,22 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Threading;
+using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
+namespace Anderson.PackageAudit.Infrastructure.Authorization
 {
-    public class TokenParametersModule : ServiceModule
+    public class TokenParametersModule : Module
     {
-        public override void Load(IServiceCollection serviceCollection)
+        protected override void Load(ContainerBuilder serviceCollection)
         {
-            serviceCollection.AddSingleton(provider =>
+            serviceCollection.Register(provider =>
             {
-                var configuration = provider.GetService<IConfiguration>();
-                var openIdConfig = provider.GetService<OpenIdConnectConfiguration>();
+                var configuration = provider.Resolve<IConfiguration>();
+                var openIdConfig = provider.Resolve<OpenIdConnectConfiguration>();
                 var tokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = configuration["auth0:issuer"],
@@ -35,11 +36,11 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
                 }
 
                 return tokenValidationParameters;
-            });
+            }).SingleInstance().AsSelf();
 
-            serviceCollection.AddSingleton(provider =>
+            serviceCollection.Register(provider =>
             {
-                var configuration = provider.GetService<IConfiguration>();
+                var configuration = provider.Resolve<IConfiguration>();
                 var metadataAddress = $"https://{configuration["auth0:domain"]}/.well-known/openid-configuration";
 
                 var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
@@ -49,12 +50,7 @@ namespace Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules
                 return configurationManager.GetConfigurationAsync(CancellationToken.None)
                     .GetAwaiter()
                     .GetResult();
-            });
-        }
-
-        private SecurityToken SignatureValidator(string token, TokenValidationParameters validationparameters)
-        {
-            return new JwtSecurityToken(token);
+            }).SingleInstance().AsSelf();
         }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using Anderson.PackageAudit.Enrolment;
-using Anderson.PackageAudit.Errors;
+using Anderson.PackageAudit.Infrastructure.Authorization;
+using Anderson.PackageAudit.Infrastructure.Configuration;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
-using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
 using Anderson.PackageAudit.Infrastructure.Errors;
-using Anderson.PackageAudit.Infrastructure.Persistence;
 using Anderson.PackageAudit.Infrastructure.Persistence.Mongo;
 using Anderson.PackageAudit.Infrastructure.Persistence.Redis;
 using Anderson.PackageAudit.Infrastructure.Pipes;
 using Anderson.PackageAudit.Projects;
 using Anderson.PackageAudit.Tenants;
+using Autofac;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Host.Config;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Anderson.PackageAudit
 {
@@ -19,9 +18,9 @@ namespace Anderson.PackageAudit
     {
         public void Initialize(ExtensionConfigContext context)
         {
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-            var provider = serviceCollection.BuildServiceProvider();
+            var builder = new ContainerBuilder();
+            ConfigureServices(builder);
+            var provider = builder.Build();
 
             context
                 .AddBindingRule<InjectAttribute>()
@@ -33,19 +32,17 @@ namespace Anderson.PackageAudit
             registry.RegisterExtension(typeof(IFunctionExceptionFilter), filter);
         }
 
-        public static void ConfigureServices(IServiceCollection serviceCollection)
+        public static void ConfigureServices(ContainerBuilder builder)
         {
-            serviceCollection.LoadModule<EnrolmentModule>();
-            serviceCollection.LoadModule<ProjectsModule>();
-            serviceCollection.LoadModule<TenantModule>();
-            serviceCollection.LoadModule<ErrorModule>();
-
-            serviceCollection.LoadModule<ConfigurationModule>();
-            serviceCollection.LoadModule<TokenParametersModule>();
-
-            serviceCollection.LoadModule<MongoModule>();
-            serviceCollection.LoadModule<RedisModule>();
-            serviceCollection.LoadModule<PipeModule>();
+            builder.RegisterModule<EnrolmentModule>();
+            builder.RegisterModule<ProjectsModule>();
+            builder.RegisterModule<TenantModule>();
+            builder.RegisterModule<ErrorModule>();
+            builder.RegisterModule<ConfigurationModule>();
+            builder.RegisterModule<TokenParametersModule>();
+            builder.RegisterModule<MongoModule>();
+            builder.RegisterModule<RedisModule>();
+            builder.RegisterModule<PipeModule>();
             
         }
     }

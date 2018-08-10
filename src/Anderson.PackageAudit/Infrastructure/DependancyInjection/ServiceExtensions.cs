@@ -1,5 +1,4 @@
-﻿using Anderson.PackageAudit.Infrastructure.DependancyInjection.Modules;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Anderson.PackageAudit.Infrastructure.DependancyInjection
 {
