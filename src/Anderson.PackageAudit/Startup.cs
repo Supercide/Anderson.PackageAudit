@@ -6,6 +6,7 @@ using Anderson.PackageAudit.Infrastructure.Errors;
 using Anderson.PackageAudit.Infrastructure.Persistence.Mongo;
 using Anderson.PackageAudit.Infrastructure.Persistence.Redis;
 using Anderson.PackageAudit.Infrastructure.Pipes;
+using Anderson.PackageAudit.Packages;
 using Anderson.PackageAudit.Projects;
 using Anderson.PackageAudit.Tenants;
 using Autofac;
@@ -36,6 +37,7 @@ namespace Anderson.PackageAudit
         {
             builder.RegisterModule<EnrolmentModule>();
             builder.RegisterModule<ProjectsModule>();
+            builder.RegisterModule<PackagesModule>();
             builder.RegisterModule<TenantModule>();
             builder.RegisterModule<ErrorModule>();
             builder.RegisterModule<ConfigurationModule>();

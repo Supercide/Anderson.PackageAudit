@@ -1,4 +1,5 @@
 ﻿using System;
+using Anderson.PackageAudit.Shared.Models;
 
 namespace Anderson.PackageAudit.Projects.Models
 {

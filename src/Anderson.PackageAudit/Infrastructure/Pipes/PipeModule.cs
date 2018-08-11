@@ -13,9 +13,10 @@ namespace Anderson.PackageAudit.Infrastructure.Pipes
         {
             containerBuilder.Register(provider =>
             {
-                object Resolver(Type type) => provider.Resolve(type);
+                var scope = provider.Resolve<ILifetimeScope>();
+                object Resolver(Type type) => scope.Resolve(type);
                 return (Func<Type, object>) Resolver;
-            }).SingleInstance().AsSelf();
+            }).InstancePerLifetimeScope().AsSelf();
 
             containerBuilder.RegisterType<PipelineDefinitionBuilder>();
             containerBuilder.RegisterType<AuthorizationPipe>();

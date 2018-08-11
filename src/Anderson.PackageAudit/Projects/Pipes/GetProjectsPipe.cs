@@ -8,6 +8,7 @@ using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Infrastructure;
 using Anderson.PackageAudit.Projects.Models;
+using Anderson.PackageAudit.Shared.Models;
 using Anderson.PackageAudit.SharedPipes.Authorization.Errors;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
@@ -15,14 +16,6 @@ using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Projects.Pipes
 {
-    public class AuditProjectPipe : PipelineDefinition<AuditRequest>
-    {
-        public override Task HandleAsync(AuditRequest request, Context context, CancellationToken token = default(CancellationToken))
-        {
-            return Task.CompletedTask;
-        }
-    }
-    
     public class GetProjectsPipe : PipelineDefinition<ProjectsRequest>
     {
         private readonly IMongoCollection<Project> _projectCollection;

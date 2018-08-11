@@ -25,17 +25,7 @@ namespace Anderson.PackageAudit.Projects
                     .ThenWithMutation<ProjectsMutationPipe, ProjectsRequest>()
                     .ThenWith<GetProjectsPipe>()
                     .Build());
-            });
-
-            containerBuilder.Register(provider =>
-            {
-                var builder = provider.Resolve<PipelineDefinitionBuilder>();
-
-                return builder.StartWith<AuthorizationPipe, HttpRequest>()
-                    .ThenWithMutation<HttpRequestMutationPipe<AuditRequest>, AuditRequest>()
-                    .ThenWith<AuditProjectPipe>()
-                    .Build() as AuditProjectPipeline;
-            });
+            });            
         }
     }
 }

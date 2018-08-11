@@ -48,6 +48,13 @@ namespace Anderson.PackageAudit.Infrastructure.Persistence.Mongo
                 var collection = mongodb.GetCollection<Project>(nameof(Project));
                 return collection;
             }).SingleInstance().AsSelf();
+
+            serviceCollection.Register(provider =>
+            {
+                var mongodb = provider.Resolve<IMongoDatabase>();
+                var collection = mongodb.GetCollection<Package>(nameof(Package));
+                return collection;
+            }).SingleInstance().AsSelf();
         }
     }
 

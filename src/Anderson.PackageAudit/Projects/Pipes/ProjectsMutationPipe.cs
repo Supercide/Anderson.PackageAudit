@@ -22,14 +22,4 @@ namespace Anderson.PackageAudit.Projects.Pipes
             }, context, token);
         }
     }
-
-    public class AuditMutation : HttpRequestMutationPipe<AuditRequest>
-    {
-        public override Task HandleAsync(HttpRequest request, Context context, CancellationToken token = default(CancellationToken))
-        {
-            var model = SerialiseToModel(request);
-            model.ApiKey = Guid.Parse(request.Headers["X-API-KEY"].First());
-            return InnerHandler.HandleAsync(model, context, token);
-        }
-    }
 }

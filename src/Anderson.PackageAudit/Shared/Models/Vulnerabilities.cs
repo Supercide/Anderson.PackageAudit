@@ -1,4 +1,4 @@
-﻿namespace Anderson.PackageAudit.Projects.Models
+﻿namespace Anderson.PackageAudit.Shared.Models
 {
     public class Vulnerabilities
     {
