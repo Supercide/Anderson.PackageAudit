@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Anderson.Infrastructure.Authorization;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Infrastructure;
+using Anderson.PackageAudit.Infrastructure.Identity;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;
 using Microsoft.AspNetCore.Http;

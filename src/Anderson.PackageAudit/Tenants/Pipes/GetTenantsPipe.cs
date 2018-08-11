@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Infrastructure;
+using Anderson.PackageAudit.Infrastructure.Identity;
 using Anderson.PackageAudit.SharedPipes.NoOp;
 using Anderson.PackageAudit.Tenants.Models;
 using Anderson.Pipelines.Definitions;

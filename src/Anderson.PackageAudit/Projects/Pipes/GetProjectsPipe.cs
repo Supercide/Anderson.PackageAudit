@@ -36,7 +36,7 @@ namespace Anderson.PackageAudit.Projects.Pipes
                     new ProjectResponse
                     {
                         Packages = 10,
-                        Vulnerabilities = new Vulnerabilities
+                        Vulnerabilities = new Shared.Models.VulnerabilitySummary
                         {
                             High = 10,
                             Low = 9,
@@ -82,7 +82,7 @@ namespace Anderson.PackageAudit.Projects.Pipes
                 LastUpdated = project.LastUpdated,
                 Title = project.Title,
                 Packages = project.Packages.Count(),
-                Vulnerabilities = new Vulnerabilities
+                Vulnerabilities = new Shared.Models.VulnerabilitySummary
                 {
                     High = classifications.Count(x => x == Classification.High),
                     Low = classifications.Count(x => x == Classification.Low),

@@ -81,6 +81,12 @@ namespace Anderson.PackageAudit.Domain
         }
     }
 
+    public class Vulnerability
+    {
+        public string Title { get; set; }
+        public string Version { get; set; }
+    }
+
     public class Project
     {
         public Project()
@@ -100,11 +106,11 @@ namespace Anderson.PackageAudit.Domain
     {
         public Package()
         {
-            Vulnerabilities = new Vulnerability[0];
+            Vulnerabilities = new VulnerabilitySummary[0];
         }
         public string Name { get; set; }
         public string Version { get; set; }
-        public Vulnerability[] Vulnerabilities { get; set; }
+        public VulnerabilitySummary[] Vulnerabilities { get; set; }
         public string PackageManager { get; set; }
     }
 
@@ -116,20 +122,12 @@ namespace Anderson.PackageAudit.Domain
         High
     }
 
-    public class Vulnerability
+    public class VulnerabilitySummary
     {
         public Classification Classification { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string[] AffectedVersions { get; set; }
-        public string[] References { get; set; }
-    }
-    public class VulnerabilitySummary
-    {
-        public string[] Versions { get; set; }
-        public Classification Classification { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
         public string[] References { get; set; }
 
     }

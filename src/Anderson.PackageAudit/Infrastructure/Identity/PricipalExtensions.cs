@@ -2,7 +2,7 @@
 using System.Security.Principal;
 using Anderson.PackageAudit.Domain;
 
-namespace Anderson.PackageAudit.Infrastructure
+namespace Anderson.PackageAudit.Infrastructure.Identity
 {
     public static class PricipalExtensions
     {

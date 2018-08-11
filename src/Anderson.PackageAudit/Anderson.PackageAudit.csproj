@@ -36,4 +36,9 @@
   <ItemGroup>
     <Folder Include="Projects\Repositories\" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Anderson.PackageAudit">
+      <HintPath>bin\Debug\netstandard2.0\bin\Anderson.PackageAudit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

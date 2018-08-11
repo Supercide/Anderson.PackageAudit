@@ -7,6 +7,7 @@ using Anderson.PackageAudit.Domain;
 using Anderson.PackageAudit.Enrolment.Errors;
 using Anderson.PackageAudit.Enrolment.Models;
 using Anderson.PackageAudit.Infrastructure;
+using Anderson.PackageAudit.Infrastructure.Identity;
 using Anderson.PackageAudit.Tenants.Models;
 using Anderson.Pipelines.Definitions;
 using Anderson.Pipelines.Responses;

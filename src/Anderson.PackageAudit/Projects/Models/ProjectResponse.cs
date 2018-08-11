@@ -9,6 +9,6 @@ namespace Anderson.PackageAudit.Projects.Models
         public DateTime LastUpdated { get; set; }
         public string Version { get; set; }
         public int Packages { get; set; }
-        public Vulnerabilities Vulnerabilities { get; set; }
+        public Shared.Models.VulnerabilitySummary Vulnerabilities { get; set; }
     }
 }
