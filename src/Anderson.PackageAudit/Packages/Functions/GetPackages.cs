@@ -5,23 +5,23 @@ using Anderson.PackageAudit.Core.Errors;
 using Anderson.PackageAudit.Errors;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
 using Anderson.PackageAudit.Infrastructure.Errors.Extensions;
-using Anderson.PackageAudit.Vulnerabilities.Models;
-using Anderson.PackageAudit.Vulnerabilities.Pipelines;
+using Anderson.PackageAudit.Packages.Pipelines;
+using Anderson.PackageAudit.Packages.Models;
 using Anderson.Pipelines.Definitions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 
-namespace Anderson.PackageAudit.Vulnerabilities.Functions
+namespace Anderson.PackageAudit.Projects.Functions
 {
-    public class GetVulnerabilities
+    public class GetPackages
     {
-        [FunctionName(nameof(GetVulnerabilities))]
+        [FunctionName(nameof(GetPackages))]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "tenants/{tenant}/vulnerabilities")]HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "Get", Route = "tenants/{tenant}/packages")]HttpRequest req,
             [Inject]IErrorResolver errorResolver,
-            [Inject]GetVulnerabilitiesPipeline pipeline,
+            [Inject]GetPackagesPipeline pipeline,
             [FromRoute]string tenant)
         {
             var context = new Context
@@ -32,10 +32,11 @@ namespace Anderson.PackageAudit.Vulnerabilities.Functions
 
             if (context.HasError)
             {
+
                 return context.GetAllErrors().Cast<Error>().First().ToActionResult(errorResolver.Resolve);
             }
 
-            return new OkObjectResult(context.GetResponse<IEnumerable<VulnerabilityResponse>>());
+            return new OkObjectResult(context.GetResponse<IEnumerable<PackagesResponse>>());
         }
     }
 }

@@ -7,10 +7,13 @@
   <ItemGroup>
     <Compile Remove="Integration\MarketingPreferenceTest\**" />
     <Compile Remove="Integration\TenantTests\**" />
+    <Compile Remove="Unit\**" />
     <EmbeddedResource Remove="Integration\MarketingPreferenceTest\**" />
     <EmbeddedResource Remove="Integration\TenantTests\**" />
+    <EmbeddedResource Remove="Unit\**" />
     <None Remove="Integration\MarketingPreferenceTest\**" />
     <None Remove="Integration\TenantTests\**" />
+    <None Remove="Unit\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Anderson.PackageAudit\Anderson.PackageAudit.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Unit\" />
   </ItemGroup>
 
 </Project>

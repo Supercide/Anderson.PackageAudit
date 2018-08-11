@@ -7,6 +7,11 @@
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Packages\Repositories\**" />
+    <EmbeddedResource Remove="Packages\Repositories\**" />
+    <None Remove="Packages\Repositories\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Anderson.Pipelines" Version="2.0.0.24-RF001" />
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
@@ -35,10 +40,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Projects\Repositories\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Anderson.PackageAudit">
-      <HintPath>bin\Debug\netstandard2.0\bin\Anderson.PackageAudit.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
