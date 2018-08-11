@@ -1,4 +1,5 @@
 ﻿using Anderson.PackageAudit.Packages.Models;
+using Anderson.PackageAudit.Packages.Pipelines;
 using Anderson.PackageAudit.Packages.Pipes;
 using Anderson.PackageAudit.Projects.Pipelines;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
@@ -19,7 +20,7 @@ namespace Anderson.PackageAudit.Packages
             {
                 var builder = provider.Resolve<PipelineDefinitionBuilder>();
 
-                return new GetProjectsPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
+                return new GetPackagesPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<PackagesMutationPipe, PackagesRequest>()
                     .ThenWith<GetPackagesPipe>()
                     .Build());

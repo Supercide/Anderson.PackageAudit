@@ -9,9 +9,14 @@ using Anderson.PackageAudit.Infrastructure.Pipes;
 using Anderson.PackageAudit.Packages;
 using Anderson.PackageAudit.Projects;
 using Anderson.PackageAudit.Tenants;
+using Anderson.PackageAudit.Vulnerabilities;
 using Autofac;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Host.Config;
+using MongoDB.Bson.Serialization.Conventions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Anderson.PackageAudit
 {
@@ -31,6 +36,14 @@ namespace Anderson.PackageAudit
             var filter = new ScopeCleanupFilter();
             registry.RegisterExtension(typeof(IFunctionInvocationFilter), filter);
             registry.RegisterExtension(typeof(IFunctionExceptionFilter), filter);
+
+            JsonConvert.DefaultSettings = () =>
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.Converters.Add(new StringEnumConverter());
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                return settings;
+            };
         }
 
         public static void ConfigureServices(ContainerBuilder builder)
@@ -38,6 +51,7 @@ namespace Anderson.PackageAudit
             builder.RegisterModule<EnrolmentModule>();
             builder.RegisterModule<ProjectsModule>();
             builder.RegisterModule<PackagesModule>();
+            builder.RegisterModule<VulnerabilitiesModule>();
             builder.RegisterModule<TenantModule>();
             builder.RegisterModule<ErrorModule>();
             builder.RegisterModule<ConfigurationModule>();
@@ -45,7 +59,6 @@ namespace Anderson.PackageAudit
             builder.RegisterModule<MongoModule>();
             builder.RegisterModule<RedisModule>();
             builder.RegisterModule<PipeModule>();
-            
         }
     }
 }

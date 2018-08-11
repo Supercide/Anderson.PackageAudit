@@ -113,7 +113,8 @@ namespace Anderson.PackageAudit.Domain
         public VulnerabilitySummary[] Vulnerabilities { get; set; }
         public string PackageManager { get; set; }
     }
-
+    
+    
     public enum Classification
     {
         Unknown,

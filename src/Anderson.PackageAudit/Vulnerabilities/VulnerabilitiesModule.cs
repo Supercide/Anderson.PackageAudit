@@ -2,6 +2,7 @@
 using Anderson.PackageAudit.Packages.Pipelines;
 using Anderson.PackageAudit.Packages.Pipes;
 using Anderson.PackageAudit.SharedPipes.Authorization.Pipes;
+using Anderson.PackageAudit.Vulnerabilities.Models;
 using Anderson.PackageAudit.Vulnerabilities.Pipelines;
 using Anderson.PackageAudit.Vulnerabilities.Pipes;
 using Autofac;
@@ -22,8 +23,8 @@ namespace Anderson.PackageAudit.Vulnerabilities
                 var builder = provider.Resolve<PipelineDefinitionBuilder>();
 
                 return new GetVulnerabilitiesPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
-                    .ThenWithMutation<PackagesMutationPipe, PackagesRequest>()
-                    .ThenWith<GetPackagesPipe>()
+                    .ThenWithMutation<VulnerabilityMutationPipe, VulnerabilitiesRequest>()
+                    .ThenWith<GetVulnerabilitiesPipe>()
                     .Build());
             });
         }

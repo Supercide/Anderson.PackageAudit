@@ -28,9 +28,9 @@ namespace Anderson.PackageAudit.Packages.Pipes
         {
             if (IsAuthorizedForTenant(request, context))
             {
-                IEnumerable<ProjectResponse> projects = new[]
+                IEnumerable<PackagesResponse> projects = new[]
                 {
-                    new ProjectResponse
+                    new PackagesResponse
                     {
                         Packages = 10,
                         Vulnerabilities = new Shared.Models.VulnerabilitySummary

@@ -9,6 +9,7 @@ using Anderson.PackageAudit.SharedPipes.Authorization.Errors;
 using Anderson.PackageAudit.Vulnerabilities.Models;
 using Anderson.Pipelines.Definitions;
 using MongoDB.Driver;
+using Classification = Anderson.PackageAudit.Vulnerabilities.Models.Classification;
 
 namespace Anderson.PackageAudit.Vulnerabilities.Pipes
 {
