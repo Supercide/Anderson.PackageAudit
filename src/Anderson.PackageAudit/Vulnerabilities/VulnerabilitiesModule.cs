@@ -19,6 +19,9 @@ namespace Anderson.PackageAudit.Vulnerabilities
             containerBuilder.RegisterType<VulnerabilityMutationPipe>().SingleInstance().AsSelf();
             containerBuilder.RegisterType<PackageVulnerabilityMutationPipe>().SingleInstance().AsSelf();
             containerBuilder.RegisterType<GetPackageVulnerabilitiesPipe>().SingleInstance().AsSelf();
+            
+            containerBuilder.RegisterType<ProjectVulnerabilityMutationPipe>().SingleInstance().AsSelf();
+            containerBuilder.RegisterType<GetProjectVulnerabilitiesPipe>().SingleInstance().AsSelf();
 
             containerBuilder.Register(provider =>
             {
@@ -37,6 +40,16 @@ namespace Anderson.PackageAudit.Vulnerabilities
                 return new GetPackageVulnerabilitiesPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<PackageVulnerabilityMutationPipe, PackageVulnerabilitiesRequest>()
                     .ThenWith<GetPackageVulnerabilitiesPipe>()
+                    .Build());
+            });
+
+            containerBuilder.Register(provider =>
+            {
+                var builder = provider.Resolve<PipelineDefinitionBuilder>();
+
+                return new GetProjectVulnerabilitiesPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
+                    .ThenWithMutation<ProjectVulnerabilityMutationPipe, ProjectVulnerabilitiesRequest>()
+                    .ThenWith<GetProjectVulnerabilitiesPipe>()
                     .Build());
             });
         }
