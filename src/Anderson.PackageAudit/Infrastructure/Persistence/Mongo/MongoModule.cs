@@ -62,6 +62,13 @@ namespace Anderson.PackageAudit.Infrastructure.Persistence.Mongo
                 var collection = mongodb.GetCollection<Vulnerability>(nameof(Vulnerability));
                 return collection;
             }).SingleInstance().AsSelf();
+
+            serviceCollection.Register(provider =>
+            {
+                var mongodb = provider.Resolve<IMongoDatabase>();
+                var collection = mongodb.GetCollection<Key>(nameof(Key));
+                return collection;
+            }).SingleInstance().AsSelf();
         }
     }
 

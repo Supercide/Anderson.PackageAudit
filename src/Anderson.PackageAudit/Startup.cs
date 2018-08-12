@@ -6,6 +6,7 @@ using Anderson.PackageAudit.Infrastructure.Errors;
 using Anderson.PackageAudit.Infrastructure.Persistence.Mongo;
 using Anderson.PackageAudit.Infrastructure.Persistence.Redis;
 using Anderson.PackageAudit.Infrastructure.Pipes;
+using Anderson.PackageAudit.Keys;
 using Anderson.PackageAudit.Packages;
 using Anderson.PackageAudit.Projects;
 using Anderson.PackageAudit.Tenants;
@@ -53,6 +54,7 @@ namespace Anderson.PackageAudit
             builder.RegisterModule<PackagesModule>();
             builder.RegisterModule<VulnerabilitiesModule>();
             builder.RegisterModule<TenantModule>();
+            builder.RegisterModule<KeysModule>();
             builder.RegisterModule<ErrorModule>();
             builder.RegisterModule<ConfigurationModule>();
             builder.RegisterModule<TokenParametersModule>();
