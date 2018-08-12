@@ -27,6 +27,7 @@ namespace Anderson.PackageAudit.Tenants.Pipes
             if (_tenantCollection.Find(x => x.Name == request.Name).Any())
             {
                 context.SetError(TenantError.AlreadyExists);
+                return Task.CompletedTask;
             }
 
             return _tenantCollection.InsertOneAsync(new Tenant
