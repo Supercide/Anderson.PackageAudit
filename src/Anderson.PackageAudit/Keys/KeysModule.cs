@@ -18,6 +18,9 @@ namespace Anderson.PackageAudit.Keys
             containerBuilder.RegisterType<GetKeysPipe>().SingleInstance().AsSelf();
             containerBuilder.RegisterType<KeysMutationPipe>().SingleInstance().AsSelf();
 
+            containerBuilder.RegisterType<CreateKeyPipe>().SingleInstance().AsSelf();
+            containerBuilder.RegisterType<CreateKeyMutationPipe>().SingleInstance().AsSelf();
+
             containerBuilder.Register(provider =>
             {
                 var builder = provider.Resolve<PipelineDefinitionBuilder>();
@@ -25,6 +28,16 @@ namespace Anderson.PackageAudit.Keys
                 return new GetKeysPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
                     .ThenWithMutation<KeysMutationPipe, KeysRequest>()
                     .ThenWith<GetKeysPipe>()
+                    .Build());
+            });            
+
+            containerBuilder.Register(provider =>
+            {
+                var builder = provider.Resolve<PipelineDefinitionBuilder>();
+
+                return new CreateKeysPipeline(builder.StartWith<AuthorizationPipe, HttpRequest>()
+                    .ThenWithMutation<CreateKeyMutationPipe, CreateKeyRequest>()
+                    .ThenWith<CreateKeyPipe>()
                     .Build());
             });            
         }

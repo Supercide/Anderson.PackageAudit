@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Anderson.Infrastructure.Authorization;
@@ -13,29 +12,37 @@ using MongoDB.Driver;
 
 namespace Anderson.PackageAudit.Keys.Pipes
 {
-    public class GetKeysPipe : PipelineDefinition<KeysRequest>
+    public class CreateKeyPipe : PipelineDefinition<CreateKeyRequest>
     {
         private readonly IMongoCollection<Key> _keyCollection;
         private readonly IMongoCollection<Tenant> _tenantCollection;
 
-        public GetKeysPipe(IMongoCollection<Tenant> tenantCollection, IMongoCollection<Key> keyCollection)
+        public CreateKeyPipe(IMongoCollection<Tenant> tenantCollection, IMongoCollection<Key> keyCollection)
         {
             _tenantCollection = tenantCollection;
             _keyCollection = keyCollection;
         }
 
-        public override Task HandleAsync(KeysRequest request, Context context, CancellationToken token = default(CancellationToken))
+        public override Task HandleAsync(CreateKeyRequest request, Context context, CancellationToken token = default(CancellationToken))
         {
             if (IsAuthorizedForTenant(request, context))
             {
-                var keys = _keyCollection.FindSync(x => x.Tenant == request.Tenant).ToList().Select(key => new KeyResponse
+                var key = new Key
+                {
+                    Name = request.Name,
+                    Value = Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow,
+                    Tenant = request.Tenant
+                };
+
+                _keyCollection.InsertOne(key, cancellationToken: token);
+
+                context.SetResponse(new KeyResponse
                 {
                     Title = key.Name,
                     Value = key.Value,
                     Created = key.CreatedAt
                 });
-
-                context.SetResponse(keys);
 
                 return Task.CompletedTask;
             }
@@ -44,7 +51,7 @@ namespace Anderson.PackageAudit.Keys.Pipes
             return Task.CompletedTask;
         }
 
-        private bool IsAuthorizedForTenant(KeysRequest request, Context context)
+        private bool IsAuthorizedForTenant(CreateKeyRequest request, Context context)
         {
             var account = context[WellKnownContextKeys.Account] as Account;
 

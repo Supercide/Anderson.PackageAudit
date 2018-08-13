@@ -7,33 +7,13 @@ using JetBrains.Annotations;
 
 namespace Anderson.PackageAudit.Domain
 {
-    public class Key : IEquatable<Key>
+    public class Key
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public Guid Value { get; set; }
-
-        public bool Equals(Key other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return string.Equals(Name, other.Name) && Value.Equals(other.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Key) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Value != null ? Value.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-            }
-        }
+        public DateTime CreatedAt { get; set; }
+        public string Tenant { get; set; }
     }
 
     public class Tenant
