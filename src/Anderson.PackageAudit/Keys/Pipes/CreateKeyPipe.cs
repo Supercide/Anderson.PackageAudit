@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Anderson.Infrastructure.Authorization;
 using Anderson.PackageAudit.Domain;
+using Anderson.PackageAudit.Infrastructure.Authorization;
 using Anderson.PackageAudit.Keys.Models;
 using Anderson.PackageAudit.Packages.Models;
 using Anderson.PackageAudit.SharedPipes.Authorization.Errors;

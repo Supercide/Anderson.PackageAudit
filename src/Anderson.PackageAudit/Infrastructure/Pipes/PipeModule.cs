@@ -18,6 +18,7 @@ namespace Anderson.PackageAudit.Infrastructure.Pipes
                 return (Func<Type, object>) Resolver;
             }).InstancePerLifetimeScope().AsSelf();
 
+            containerBuilder.RegisterType<HttpRequestPipe>();
             containerBuilder.RegisterType<PipelineDefinitionBuilder>();
             containerBuilder.RegisterType<AuthorizationPipe>();
             containerBuilder.RegisterGeneric(typeof(HttpRequestMutationPipe<>))

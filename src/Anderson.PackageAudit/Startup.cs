@@ -1,4 +1,5 @@
-﻿using Anderson.PackageAudit.Enrolment;
+﻿using Anderson.PackageAudit.Audit;
+using Anderson.PackageAudit.Enrolment;
 using Anderson.PackageAudit.Infrastructure.Authorization;
 using Anderson.PackageAudit.Infrastructure.Configuration;
 using Anderson.PackageAudit.Infrastructure.DependancyInjection;
@@ -55,6 +56,7 @@ namespace Anderson.PackageAudit
             builder.RegisterModule<VulnerabilitiesModule>();
             builder.RegisterModule<TenantModule>();
             builder.RegisterModule<KeysModule>();
+            builder.RegisterModule<AuditModule>();
             builder.RegisterModule<ErrorModule>();
             builder.RegisterModule<ConfigurationModule>();
             builder.RegisterModule<TokenParametersModule>();
