@@ -33,38 +33,18 @@ namespace Anderson.PackageAudit.Domain
         public List<Key> Keys { get; set; }
         public List<Account> Accounts { get; set; }
         public DateTime CreatedAt { get; set; }
-
-
-        public Response<Key, Error> GenerateKey(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return KeyError.InvalidKeyName;
-            }
-
-            if (Keys != null && Keys.Any(x => x.Name == name))
-            {
-                return TenantError.TenantAlreadyContainsKey;
-            }
-            var value = Guid.NewGuid();
-            var key = new Key { Name = name, Value = value };
-
-            Keys = Keys ?? new List<Key>();
-            Keys.Add(key);
-            return key;
-        }
-
-        public void RecordProjectResult(Project project)
-        {
-            Projects = Projects ?? new List<Project>();
-            Projects.Add(project);
-        }
     }
 
     public class Vulnerability
     {
+        public Guid Id { get; set; }
+        public string Tenant { get; set; }
         public string Title { get; set; }
+        public Classification Level { get; set; }
+        public string Project { get; set; }
+        public DateTime Published { get; set; }
         public string Version { get; set; }
+        public string Package { get; set; }
     }
 
     public class Project
@@ -129,15 +109,6 @@ namespace Anderson.PackageAudit.Domain
 
         public string Name { get; set; }
         public Guid Id { get; set; }
-    }
-
-    public class KeyError : Error
-    {
-        public KeyError(int errorCode, string errorMessage) : base(errorCode, errorMessage)
-        {
-        }
-
-        public static readonly KeyError InvalidKeyName = new KeyError(400, "InvalidKeyName");
     }
 
     public class TenantError : Error

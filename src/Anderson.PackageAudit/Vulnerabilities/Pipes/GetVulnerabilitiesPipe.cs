@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Anderson.PackageAudit.Domain;
@@ -29,18 +30,9 @@ namespace Anderson.PackageAudit.Vulnerabilities.Pipes
         {
             if (IsAuthorizedForTenant(request, context))
             {
-                IEnumerable<VulnerabilityResponse> vulnerabilities = new[]
-                {
-                    new VulnerabilityResponse
-                    {
-                        Version = "3.0.1",
-                        Published = DateTime.Today,
-                        Package = "FluentValidation",
-                        Title = "ReDos",
-                        Project = "Argon V3.2.1",
-                        Level = Classification.High
-                    },
-                };
+                var vulnerabilities = _vulnerabilitiesCollection.Find(x => x.Tenant == request.Tenant)
+                    .ToList()
+                    .Select(MapToResponse);
 
                 context.SetResponse(vulnerabilities);
 
@@ -49,6 +41,19 @@ namespace Anderson.PackageAudit.Vulnerabilities.Pipes
 
             context.SetError(AuthorizationErrors.Unauthorized);
             return Task.CompletedTask;
+        }
+
+        private VulnerabilityResponse MapToResponse(Vulnerability arg)
+        {
+            return new VulnerabilityResponse
+            {
+                Version = arg.Version,
+                Published = arg.Published,
+                Package = arg.Package,
+                Title = arg.Title,
+                Project = arg.Project,
+                Level = (Classification) arg.Level
+            };
         }
 
         private bool IsAuthorizedForTenant(VulnerabilitiesRequest request, Context context)
